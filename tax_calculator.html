@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <title>Tax Calculator</title>
+    <style>
+        .btn {
+            display: inline-block;
+            font-weight: 700;
+            color: white;
+            text-align: center;
+            vertical-align: middle;
+            cursor: pointer;
+            padding: 0.4rem 0.8rem;
+            font-size: 0.875rem;
+            line-height: 1.25rem;
+            border-radius: 0.2rem;
+            transition: background-color 0.15s ease-in-out;
+        }
+        
+        .btn-calculate {
+            background-color: #10b981; /* Green */
+        }
+        
+        .btn-calculate:hover {
+            background-color: #059669; /* Darker Green */
+        }
+        
+        .btn-clear {
+            background-color: #6b7280; /* Gray */
+        }
+        
+        .btn-clear:hover {
+            background-color: #4b5563; /* Darker Gray */
+        }
+        
+        .input-group {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 0.75rem;
+        }
+        
+        .input-group span {
+            white-space: nowrap;
+        }
+
+        .input {
+            flex-grow: 1;
+            appearance-none;
+            border: 1px solid #d1d5db; /* light gray */
+            padding: 0.5rem;
+            font-size: 0.875rem;
+            line-height: 1.25rem;
+            border-radius: 0.25rem;
+        }
+    </style>
+</head>
+<body class="bg-gray-200">
+    <div class="max-w-xs mx-auto my-10 bg-white p-6 border border-gray-300">
+        <div class="input-group">
+            <span class="text-gray-700">$</span>
+            <input type="number" id="beforeTax" class="input" placeholder="Before Tax Price" value="100" />
+        </div>
+
+        <div class="input-group">
+            <input type="number" id="taxRate" class="input" placeholder="Sales Tax Rate" value="7.75" />
+            <span class="text-gray-700">%</span>
+        </div>
+
+        <div class="input-group">
+            <span class="text-gray-700">$</span>
+            <input type="text" id="taxAmount" class="input" placeholder="Tax Amount" readonly />
+        </div>
+
+        <div class="input-group">
+            <span class="text-gray-700">$</span>
+            <input type="text" id="afterTax" class="input" placeholder="After Tax Price" readonly />
+        </div>
+
+        <div class="flex justify-between gap-2 mt-4">
+            <button type="button" id="calculate" class="btn btn-calculate w-full">
+                Calculate
+            </button>
+            <button type="button" id="clear" class="btn btn-clear w-full">
+                Clear
+            </button>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('calculate').addEventListener('click', function() {
+            const beforeTax = parseFloat(document.getElementById('beforeTax').value) || 0;
+            const taxRate = parseFloat(document.getElementById('taxRate').value) || 0;
+            const taxAmount = (beforeTax * (taxRate / 100)).toFixed(2);
+            const totalAmount = (beforeTax + parseFloat(taxAmount)).toFixed(2);
+            document.getElementById('taxAmount').value = taxAmount;
+            document.getElementById('afterTax').value = totalAmount;
+        });
+
+        document.getElementById('clear').addEventListener('click', function() {
+            document.getElementById('beforeTax').value = '';
+            document.getElementById('taxRate').value = '7.75'; // Reset to default tax rate
+            document.getElementById('taxAmount').value = '';
+            document.getElementById('afterTax').value = '';
+        });
+    </script>
+</body>
+</html>
+

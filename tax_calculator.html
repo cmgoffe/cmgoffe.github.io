@@ -22,7 +22,7 @@
         }
         
         .btn-calculate {
-            background-color: #2ac740 !important; /* Green */
+            background-color: #2ac740; /* Green */
         }
         
         .btn-calculate:hover {
@@ -30,7 +30,7 @@
         }
         
         .btn-clear {
-            background-color: #bbbbbb !important; /* Gray */
+            background-color: #bbbbbb; /* Gray */
         }
         
         .btn-clear:hover {
@@ -52,7 +52,7 @@
             flex-grow: 1;
             appearance-none;
             border: 1px solid #282828; /* light gray */
-            background-color: #000000; /* 1e1e1e to 000000 background is currently white, I would like it to match input field */
+            background-color: #1e1e1e; /* 1e1e1e to 000000 background is currently white, I would like it to match input field */
             color: #ed8b09;
             padding: 0.5rem;
             font-size: 0.875rem;
@@ -61,25 +61,25 @@
         }
     </style>
 </head>
-<body class="bg-#000000">
+<body class="bg-#1e1e1e">
     <div class="max-w-xs mx-auto mt-0 mb-10 bg-gray-800 p-6 border border-black">
         <div class="input-group">
-            <span class="text-gray-700">$</span>
+            <span class="text-gray-400">$</span>
             <input type="number" id="beforeTax" class="input" placeholder="Before Tax Price" value="100" />
         </div>
 
         <div class="input-group">
             <input type="number" id="taxRate" class="input" placeholder="Sales Tax Rate" value="7.75" />
-            <span class="text-gray-700">%</span>
+            <span class="text-gray-400">%</span>
         </div>
 
         <div class="input-group">
-            <span class="text-gray-700">$</span>
+            <span class="text-gray-400">$</span>
             <input type="text" id="taxAmount" class="input" placeholder="Tax Amount" readonly />
         </div>
 
         <div class="input-group">
-            <span class="text-gray-700">$</span>
+            <span class="text-gray-400">$</span>
             <input type="text" id="afterTax" class="input" placeholder="After Tax Price" readonly />
         </div>
 

@@ -10,7 +10,7 @@
         .btn {
             display: inline-block;
             font-weight: 700;
-            color: white;
+            color: #f48f05;
             text-align: center;
             vertical-align: middle;
             cursor: pointer;
@@ -22,19 +22,19 @@
         }
         
         .btn-calculate {
-            background-color: #10b981; /* Green */
+            background-color: #2ac740; /* Green */
         }
         
         .btn-calculate:hover {
-            background-color: #059669; /* Darker Green */
+            background-color: #2ac740; /* Darker Green */
         }
         
         .btn-clear {
-            background-color: #6b7280; /* Gray */
+            background-color: #bbbbbb; /* Gray */
         }
         
         .btn-clear:hover {
-            background-color: #4b5563; /* Darker Gray */
+            background-color: #bbbbbb; /* Darker Gray */
         }
         
         .input-group {
@@ -51,7 +51,9 @@
         .input {
             flex-grow: 1;
             appearance-none;
-            border: 1px solid #d1d5db; /* light gray */
+            border: 1px solid #282828; /* light gray */
+            background-color: #1e1e1e;
+            color: #ed8b09;
             padding: 0.5rem;
             font-size: 0.875rem;
             line-height: 1.25rem;
@@ -59,8 +61,8 @@
         }
     </style>
 </head>
-<body class="bg-gray-200">
-    <div class="max-w-xs mx-auto mt-0 mb-10 bg-white p-6 border border-gray-300">
+<body class="bg-gray-800">
+    <div class="max-w-xs mx-auto mt-0 mb-10 bg-gray-600 p-6 border border-black">
         <div class="input-group">
             <span class="text-gray-700">$</span>
             <input type="number" id="beforeTax" class="input" placeholder="Before Tax Price" value="100" />

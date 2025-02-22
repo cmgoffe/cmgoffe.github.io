@@ -1,115 +1,36 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
-    <title>Tax Calculator</title>
-    <style>
-        .btn {
-            display: inline-block;
-            font-weight: 700;
-            color: #f48f05;
-            text-align: center;
-            vertical-align: middle;
-            cursor: pointer;
-            padding: 0.4rem 0.8rem;
-            font-size: 0.875rem;
-            line-height: 1.25rem;
-            border-radius: 0.2rem;
-            transition: background-color 0.15s ease-in-out;
-        }
-        
-        .btn-calculate {
-            background-color: #2ac740; /* Green */
-        }
-        
-        .btn-calculate:hover {
-            background-color: #818F97; /* Darker Green */
-        }
-        
-        .btn-clear {
-            background-color: #bbbbbb; /* Gray */
-        }
-        
-        .btn-clear:hover {
-            background-color: #bbbbbb; /* Darker Gray */
-        }
-        
-        .input-group {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            margin-bottom: 0.75rem;
-        }
-        
-        .input-group span {
-            white-space: nowrap;
-        }
-
-        .input {
-            flex-grow: 1;
-            appearance-none;
-            border: 1px solid #282828; /* light gray */
-            background-color: #1e1e1e; /* 1e1e1e to 000000 background is currently white, I would like it to match input field */
-            color: #ed8b09;
-            padding: 0.5rem;
-            font-size: 0.875rem;
-            line-height: 1.25rem;
-            border-radius: 0.25rem;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Embedded Excel Workbook</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f4;
+      margin: 0;
+      padding: 20px;
+    }
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+      background: #fff;
+      padding: 20px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+    iframe {
+      width: 100%;
+      height: 600px;
+      border: none;
+    }
+  </style>
 </head>
-<body class="bg-zinc-900">
-    <div class="max-w-xs mx-auto mt-0 mb-10 bg-zinc-800 p-6 border border-black">
-        <div class="input-group">
-            <span class="text-gray-400">$</span>
-            <input type="number" id="beforeTax" class="input" placeholder="Before Tax Price" value="100" />
-        </div>
-
-        <div class="input-group">
-            <input type="number" id="taxRate" class="input" placeholder="Sales Tax Rate" value="7.75" />
-            <span class="text-gray-400">%</span>
-        </div>
-
-        <div class="input-group">
-            <span class="text-gray-400">$</span>
-            <input type="text" id="taxAmount" class="input" placeholder="Tax Amount" readonly />
-        </div>
-
-        <div class="input-group">
-            <span class="text-gray-400">$</span>
-            <input type="text" id="afterTax" class="input" placeholder="After Tax Price" readonly />
-        </div>
-
-        <div class="flex justify-between gap-2 mt-4">
-            <button type="button" id="calculate" class="btn btn-calculate w-full">
-                Calculate
-            </button>
-            <button type="button" id="clear" class="btn btn-clear w-full">
-                Clear
-            </button>
-        </div>
-    </div>
-
-    <script>
-        document.getElementById('calculate').addEventListener('click', function() {
-            const beforeTax = parseFloat(document.getElementById('beforeTax').value) || 0;
-            const taxRate = parseFloat(document.getElementById('taxRate').value) || 0;
-            const taxAmount = (beforeTax * (taxRate / 100)).toFixed(2);
-            const totalAmount = (beforeTax + parseFloat(taxAmount)).toFixed(2);
-            document.getElementById('taxAmount').value = taxAmount;
-            document.getElementById('afterTax').value = totalAmount;
-        });
-
-        document.getElementById('clear').addEventListener('click', function() {
-            document.getElementById('beforeTax').value = '';
-            document.getElementById('taxRate').value = '7.75'; // Reset to default tax rate
-            document.getElementById('taxAmount').value = '';
-            document.getElementById('afterTax').value = '';
-        });
-    </script>
+<body>
+  <div class="container">
+    <h1>My Embedded Excel Workbook</h1>
+    <p>This is an embedded Excel workbook shared from OneDrive.</p>
+    <iframe src="YOUR_ONEDRIVE_EMBED_LINK_HERE"></iframe>
+  </div>
 </body>
 </html>
 

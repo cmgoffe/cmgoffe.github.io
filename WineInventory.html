@@ -58,6 +58,7 @@
       display: flex;
       justify-content: center;
       border-left: 4px solid var(--primary-color);
+      position: relative;
     }
     
     iframe {
@@ -65,6 +66,15 @@
       height: 270px;
       border: none;
       box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+    }
+    
+    .excel-cover {
+      position: absolute;
+      bottom: 20px;
+      width: 460px;
+      height: 30px;
+      background-color: var(--secondary-color);
+      z-index: 10;
     }
     
     footer {
@@ -86,6 +96,7 @@
     
     <div class="iframe-container">
       <iframe src="https://cherryhillscc-my.sharepoint.com/:x:/g/personal/cgoffe_chcc_com/ERUdJT7OGdFCu9sabcw_xEwBwEGDs7CE4V_r7esSmC6hMw?e=ngD64O&action=embedview&wdHideGridlines=True&wdHideHeaders=True&wdHideSheetTabs=True"></iframe>
+      <div class="excel-cover"></div>
     </div>
     
     <footer>

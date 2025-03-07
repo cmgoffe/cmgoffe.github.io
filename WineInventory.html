@@ -479,11 +479,8 @@
             const inventoryContent = document.getElementById('inventory-content');
             const modalClose = document.querySelector('.modal-close');
             
-            // URL to your JSON data file
-            const directoryUrl = 'wine-inventory-data.json';
-            
-            // Base URL for individual locker JSON files
-            const lockerDataBasePath = 'lockers/';
+            // For this example, we'll use Table_Directory.json as the main directory data
+            const directoryUrl = 'Table_Directory.json';
             
             // Excel Online URL for fallback
             const excelBaseUrl = 'https://cherryhillscc-my.sharepoint.com/:x:/g/personal/cgoffe_chcc_com/EZjTVOKpz9ZIpsAZ8ky_2OgBGC9b7yg7UN2qHjMQsmEYFA?e=PeG4wq';
@@ -494,7 +491,7 @@
             fetch(directoryUrl)
                 .then(response => {
                     if (!response.ok) {
-                        throw new Error('Failed to load directory data. Please ensure wine-inventory-data.json exists.');
+                        throw new Error('Failed to load directory data. Please ensure Table_Directory.json exists.');
                     }
                     return response.json();
                 })
@@ -549,7 +546,7 @@
                 }
                 
                 const filteredData = wineData.filter(item => {
-                    const collectorName = (item.Name || "").toLowerCase();
+                    const collectorName = (item["Sheet Name"] || "").toLowerCase();
                     return collectorName.includes(searchTerm);
                 });
                 
@@ -609,22 +606,14 @@
                     const card = document.createElement('div');
                     card.className = 'collector-card';
                     
-                    // Get the collector name
-                    const collectorName = locker.Name || "Unknown";
+                    // Get the collector name from "Sheet Name" property
+                    const collectorName = locker["Sheet Name"] || "Unknown";
                     
                     // Get bottle count
                     const bottleCount = locker["_x0023_ bottles"] || 
                                       locker["# bottles"] || 
                                       locker["Bottles"] || 
                                       0;
-                    
-                    // Create a file-friendly ID for JSON lookup
-                    const lockerFileName = collectorName.toLowerCase()
-                        .replace(/[^a-z0-9]/g, '-') // Replace non-alphanumeric chars with dash
-                        .replace(/-+/g, '-')        // Replace multiple dashes with single dash
-                        .replace(/^-|-$/g, '');     // Remove dashes at beginning and end
-                    
-                    const lockerDataUrl = `${lockerDataBasePath}${lockerFileName}.json`;
                     
                     // Excel fallback URL for this specific sheet
                     const excelSheetUrl = `${excelBaseUrl}&activeCell=${encodeURIComponent(collectorName)}!A1`;
@@ -639,8 +628,7 @@
                             <div class="bottle-label">bottles</div>
                         </div>
                         <div class="card-footer">
-                            <a class="view-link view-detail" data-locker="${lockerFileName}" 
-                               data-name="${collectorName}" data-excel="${excelSheetUrl}">
+                            <a class="view-link view-detail" data-name="${collectorName}" data-excel="${excelSheetUrl}">
                                 View Details <i class="fas fa-search-plus"></i>
                             </a>
                             <a href="${excelSheetUrl}" class="view-link" target="_blank">
@@ -655,9 +643,8 @@
                         e.preventDefault();
                         e.stopPropagation();
                         const lockerName = this.getAttribute('data-name');
-                        const lockerId = this.getAttribute('data-locker');
                         const excelUrl = this.getAttribute('data-excel');
-                        showLockerDetails(lockerId, lockerName, excelUrl);
+                        showLockerDetails(lockerName, excelUrl);
                     });
                     
                     // Make whole card clickable to view details
@@ -673,7 +660,7 @@
             }
             
             // Show locker details
-            function showLockerDetails(lockerId, lockerName, excelUrl) {
+            function showLockerDetails(lockerName, excelUrl) {
                 modalCollectorName.textContent = lockerName;
                 
                 // Clear previous content
@@ -689,8 +676,11 @@
                 detailModal.style.display = 'flex';
                 document.body.style.overflow = 'hidden'; // Prevent scrolling behind modal
                 
-                // Fetch detailed inventory data for this locker
-                const lockerDataUrl = `${lockerDataBasePath}${lockerId}.json`;
+                // Format the correct file name to fetch - use Table_SheetName format
+                const formattedName = lockerName.trim().replace(/\s+/g, ' ');
+                const lockerDataUrl = `Table_${formattedName}.json`;
+                
+                console.log(`Attempting to fetch: ${lockerDataUrl}`);
                 
                 fetch(lockerDataUrl)
                     .then(response => {
@@ -705,7 +695,7 @@
                         // Show fallback message with Excel link
                         inventoryContent.innerHTML = `
                             <div class="fallback-message">
-                                <p>Detailed inventory data couldn't be loaded for this locker.</p>
+                                <p>Detailed inventory data couldn't be loaded for ${lockerName}'s locker.</p>
                                 <div class="excel-fallback">
                                     <a href="${excelUrl}" class="excel-btn" target="_blank">
                                         <i class="fas fa-file-excel"></i> View in Excel Online
@@ -718,7 +708,7 @@
             
             // Render the detailed inventory
             function renderLockerDetails(data, lockerName) {
-                if (!data || !Array.isArray(data.wines) || data.wines.length === 0) {
+                if (!data || !Array.isArray(data) || data.length === 0) {
                     inventoryContent.innerHTML = `
                         <div class="empty-inventory">
                             <p>No wine inventory data available for ${lockerName}.</p>
@@ -727,8 +717,23 @@
                     return;
                 }
                 
-                // Generate stats
-                const stats = data.summary || calculateInventoryStats(data.wines);
+                // Process the wines data from the Table JSON format
+                const wines = data.map(item => {
+                    return {
+                        name: item.Wine || 'Unknown',
+                        bottles: item.Bottles || 1,
+                        // These fields may not exist in your current data, 
+                        // but the structure allows for future enhancement
+                        year: item.Year || 'N/A',
+                        type: item.Type || 'Wine',
+                        region: item.Region || 'N/A'
+                    };
+                });
+                
+                // Calculate stats from the wines array
+                const stats = calculateInventoryStats(wines);
+                
+                // Display the stats
                 inventoryStats.innerHTML = `
                     <div class="inventory-stat">
                         <div class="stat-title">Total Bottles</div>
@@ -759,22 +764,17 @@
                             <thead>
                                 <tr>
                                     <th>Wine</th>
-                                    <th>Year</th>
-                                    <th>Type</th>
-                                    <th>Region</th>
                                     <th>Bottles</th>
                                 </tr>
                             </thead>
                             <tbody>
                 `;
                 
-                data.wines.forEach(wine => {
+                wines.forEach(wine => {
+                    // For each wine, create a row
                     tableHTML += `
                         <tr>
                             <td>${wine.name || 'Unknown'}</td>
-                            <td class="wine-year">${wine.year || 'N/A'}</td>
-                            <td class="wine-type">${wine.type || 'N/A'}</td>
-                            <td class="wine-region">${wine.region || 'N/A'}</td>
                             <td>${wine.bottles || 1}</td>
                         </tr>
                     `;
@@ -789,7 +789,7 @@
                 inventoryContent.innerHTML = tableHTML;
             }
             
-            // Calculate inventory statistics
+            // This function determines wine types based on the name when type isn't specified
             function calculateInventoryStats(wines) {
                 let totalBottles = 0;
                 let redWines = 0;
@@ -802,10 +802,26 @@
                     const bottles = Number(wine.bottles) || 1;
                     totalBottles += bottles;
                     
-                    const type = (wine.type || '').toLowerCase();
-                    if (type.includes('red')) {
+                    // Try to infer wine type from name if type is not directly provided
+                    const wineName = wine.name.toLowerCase();
+                    const type = wine.type ? wine.type.toLowerCase() : '';
+                    
+                    // Check for wine types in the name when not provided directly
+                    if (type.includes('red') || 
+                        wineName.includes('cabernet') || 
+                        wineName.includes('merlot') || 
+                        wineName.includes('pinot noir') || 
+                        wineName.includes('syrah') || 
+                        wineName.includes('shiraz') || 
+                        wineName.includes('zinfandel') ||
+                        wineName.includes('red blend')) {
                         redWines += bottles;
-                    } else if (type.includes('white')) {
+                    } else if (type.includes('white') || 
+                              wineName.includes('chardonnay') || 
+                              wineName.includes('sauvignon blanc') || 
+                              wineName.includes('pinot grigio') || 
+                              wineName.includes('riesling') || 
+                              wineName.includes('white blend')) {
                         whiteWines += bottles;
                     } else {
                         otherWines += bottles;

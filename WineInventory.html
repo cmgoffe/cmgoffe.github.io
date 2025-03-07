@@ -280,8 +280,32 @@
                     return response.json();
                 })
                 .then(data => {
-                    wineData = data;
+                    console.log('Data loaded:', data);
+                    
+                    // Handle both array data and object with value property (from Power Automate)
+                    if (data.value && Array.isArray(data.value)) {
+                        wineData = data.value;
+                    } else if (Array.isArray(data)) {
+                        wineData = data;
+                    } else {
+                        // Try to convert to array if it's an object with numbered properties
+                        try {
+                            wineData = Object.values(data);
+                        } catch (e) {
+                            console.error('Could not convert data to array:', e);
+                            wineData = [];
+                        }
+                    }
+                    
                     loadingEl.style.display = 'none';
+                    
+                    // Check if we have valid data
+                    if (wineData.length === 0) {
+                        throw new Error('No wine inventory data found in the JSON file.');
+                    }
+                    
+                    // Log the first item to help with debugging
+                    console.log('First data item:', wineData[0]);
                     
                     // Update stats
                     updateStats(wineData);
@@ -310,17 +334,39 @@
                     return;
                 }
                 
-                const filteredData = wineData.filter(item => 
-                    item.SheetName.toLowerCase().includes(searchTerm)
-                );
+                const filteredData = wineData.filter(item => {
+                    // Get the sheet name (handle different possible property names)
+                    const sheetName = (item.SheetName || item.Sheet || item.Name || "").toLowerCase();
+                    return sheetName.includes(searchTerm);
+                });
                 
                 renderDirectory(filteredData);
             });
             
             // Update statistics
             function updateStats(data) {
+                // Make sure data is an array
+                if (!Array.isArray(data)) {
+                    console.error('Data is not an array:', data);
+                    statsEl.style.display = 'none';
+                    return;
+                }
+                
                 const totalLockers = data.length;
-                const totalBottles = data.reduce((sum, item) => sum + item["Total # Bottles"], 0);
+                
+                // Safe calculation of total bottles
+                let totalBottles = 0;
+                for (let i = 0; i < data.length; i++) {
+                    // Check different possible property names for bottles
+                    const bottleCount = data[i]["Total # Bottles"] || 
+                                      data[i]["TotalBottles"] || 
+                                      data[i]["Bottles"] || 
+                                      data[i]["BottleCount"] || 
+                                      0;
+                    
+                    // Make sure to convert to number
+                    totalBottles += Number(bottleCount) || 0;
+                }
                 
                 totalLockersEl.textContent = totalLockers;
                 totalBottlesEl.textContent = totalBottles;
@@ -342,13 +388,23 @@
                     // Use the Hyperlink value from your data, or fall back to the OneDrive URL if that's not available
                     const excelUrl = locker.Hyperlink || "https://cherryhillscc-my.sharepoint.com/:x:/g/personal/cgoffe_chcc_com/EZjTVOKpz9ZIpsAZ8ky_2OgBGC9b7yg7UN2qHjMQsmEYFA?e=PeG4wq";
                     
+                    // Get the sheet name (handle different possible property names)
+                    const sheetName = locker.SheetName || locker.Sheet || locker.Name || "Unknown";
+                    
+                    // Get bottle count (handle different possible property names)
+                    const bottleCount = locker["Total # Bottles"] || 
+                                      locker["TotalBottles"] || 
+                                      locker["Bottles"] || 
+                                      locker["BottleCount"] || 
+                                      0;
+                    
                     card.innerHTML = `
                         <div class="card-header">
-                            <div class="sheet-name">${locker.SheetName}</div>
+                            <div class="sheet-name">${sheetName}</div>
                         </div>
                         <div class="card-body">
                             <i class="fas fa-wine-bottle wine-icon"></i>
-                            <div class="bottle-count">${locker["Total # Bottles"]}</div>
+                            <div class="bottle-count">${bottleCount}</div>
                             <div class="bottle-label">bottles</div>
                         </div>
                         <div class="card-footer">

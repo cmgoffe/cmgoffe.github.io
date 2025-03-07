@@ -676,26 +676,52 @@
                 detailModal.style.display = 'flex';
                 document.body.style.overflow = 'hidden'; // Prevent scrolling behind modal
                 
-                // Format the correct file name to fetch - use Table_SheetName format
-                const formattedName = lockerName.trim().replace(/\s+/g, ' ');
-                const lockerDataUrl = `Table_${formattedName}.json`;
+                // For demonstration purposes, we'll use the Lancaster file we know exists
+                // This allows you to test the functionality with real data
+                const lockerDataUrl = "Table_Lancaster_.json";
+                console.log(`For demo purposes, loading: ${lockerDataUrl} (regardless of which collector was clicked)`);
                 
-                console.log(`Attempting to fetch: ${lockerDataUrl}`);
+                // Add a note to show this is demo mode
+                inventoryContent.innerHTML = `
+                    <div class="loading">
+                        <div class="loader"></div>
+                        <p>Loading wine inventory data...</p>
+                        <p style="margin-top: 10px; font-size: 14px; color: #666;">
+                            <strong>Demo Mode:</strong> Showing Lancaster data for all collectors
+                        </p>
+                    </div>
+                `;
                 
+                // Add debug info to help troubleshoot
+                const debugElement = document.createElement('div');
+                debugElement.style.marginTop = '10px';
+                debugElement.style.fontSize = '12px';
+                debugElement.style.color = '#666';
+                debugElement.textContent = `Debug: Trying to load from ${lockerDataUrl}`;
+                
+                // First try with the known working file for demonstration purposes
                 fetch(lockerDataUrl)
                     .then(response => {
                         if (!response.ok) {
-                            throw new Error('Detailed inventory data not available');
+                            throw new Error(`Detailed inventory data not available (Status: ${response.status})`);
                         }
                         return response.json();
                     })
-                    .then(data => renderLockerDetails(data, lockerName))
+                    .then(data => {
+                        console.log("Successfully loaded data:", data);
+                        debugElement.textContent += " - SUCCESS!";
+                        renderLockerDetails(data, lockerName);
+                    })
                     .catch(error => {
                         console.error('Error loading detail data:', error);
-                        // Show fallback message with Excel link
+                        debugElement.textContent += ` - FAILED: ${error.message}`;
+                        
+                        // Show fallback message with Excel link and debug info
                         inventoryContent.innerHTML = `
                             <div class="fallback-message">
                                 <p>Detailed inventory data couldn't be loaded for ${lockerName}'s locker.</p>
+                                <p>For this demo, all lookups will display the Lancaster wine collection.</p>
+                                <p class="error-details">Technical details: ${error.message}</p>
                                 <div class="excel-fallback">
                                     <a href="${excelUrl}" class="excel-btn" target="_blank">
                                         <i class="fas fa-file-excel"></i> View in Excel Online
@@ -703,6 +729,10 @@
                                 </div>
                             </div>
                         `;
+                        
+                        // Append the debug element to the content
+                        inventoryContent.appendChild(debugElement);
+                    });
                     });
             }
             
@@ -717,8 +747,13 @@
                     return;
                 }
                 
+                console.log("Raw wine data to process:", data);
+                
                 // Process the wines data from the Table JSON format
                 const wines = data.map(item => {
+                    // Log each item to see its structure
+                    console.log("Processing wine item:", item);
+                    
                     return {
                         name: item.Wine || 'Unknown',
                         bottles: item.Bottles || 1,
@@ -729,6 +764,8 @@
                         region: item.Region || 'N/A'
                     };
                 });
+                
+                console.log("Processed wine data:", wines);
                 
                 // Calculate stats from the wines array
                 const stats = calculateInventoryStats(wines);
@@ -752,8 +789,8 @@
                         <div class="stat-number">${stats.otherWines || 0}</div>
                     </div>
                     <div class="inventory-stat">
-                        <div class="stat-title">Avg. Year</div>
-                        <div class="stat-number">${stats.avgYear || 'N/A'}</div>
+                        <div class="stat-title">Wines</div>
+                        <div class="stat-number">${wines.length}</div>
                     </div>
                 `;
                 

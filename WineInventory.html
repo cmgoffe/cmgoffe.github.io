@@ -400,20 +400,7 @@
             <i class="fas fa-search search-icon"></i>
         </div>
         
-        <div id="stats" class="stats" style="display: none;">
-            <div class="stat-item">
-                <div class="stat-value" id="total-lockers">0</div>
-                <div class="stat-label">Wine Lockers</div>
-            </div>
-            <div class="stat-item">
-                <div class="stat-value" id="total-bottles">0</div>
-                <div class="stat-label">Total Bottles</div>
-            </div>
-            <div class="stat-item">
-                <div class="stat-value" id="avg-bottles">0</div>
-                <div class="stat-label">Avg. Bottles Per Locker</div>
-            </div>
-        </div>
+        <!-- Summary stats block removed as requested -->
         
         <div id="loading" class="loading">
             <div class="loader"></div>
@@ -453,10 +440,7 @@
             const errorEl = document.getElementById('error');
             const searchEl = document.getElementById('search');
             const updatedTimeEl = document.getElementById('updated-time');
-            const statsEl = document.getElementById('stats');
-            const totalLockersEl = document.getElementById('total-lockers');
-            const totalBottlesEl = document.getElementById('total-bottles');
-            const avgBottlesEl = document.getElementById('avg-bottles');
+            // Stats elements removed
             
             // Modal elements
             const detailModal = document.getElementById('detail-modal');
@@ -509,9 +493,7 @@
                     
                     console.log(`Loaded ${wineData.length} collector entries.`);
                     
-                    // Update stats
-                    updateStats(wineData);
-                    statsEl.style.display = 'flex';
+                    // Stats section removed as requested
                     
                     // Render directory
                     renderDirectory(wineData);
@@ -608,22 +590,7 @@
                 }
             });
             
-            // Update statistics
-            function updateStats(data) {
-                if (!Array.isArray(data) || data.length === 0) {
-                    statsEl.style.display = 'none';
-                    return;
-                }
-                
-                const totalLockers = data.length;
-                
-                // Use totalBottlesCount which is calculated from individual JSON files
-                const avgBottles = totalLockers > 0 ? Math.round(totalBottlesCount / totalLockers) : 0;
-                
-                totalLockersEl.textContent = totalLockers;
-                totalBottlesEl.textContent = totalBottlesCount;
-                avgBottlesEl.textContent = avgBottles;
-            }
+            // Update statistics function removed as requested
             
             // Render the directory cards
             function renderDirectory(data) {
@@ -750,6 +717,7 @@
                     
                     return {
                         name: item.Wine || 'Unknown',
+                        varietal: item.Varietal || 'N/A',
                         bottles: item.Bottles || 1,
                         // These fields may not exist in your current data, 
                         // but the structure allows for future enhancement
@@ -795,6 +763,7 @@
                             <thead>
                                 <tr>
                                     <th>Wine</th>
+                                    <th>Varietal</th>
                                     <th>Bottles</th>
                                 </tr>
                             </thead>
@@ -806,6 +775,7 @@
                     tableHTML += `
                         <tr>
                             <td>${wine.name || 'Unknown'}</td>
+                            <td>${wine.varietal || 'N/A'}</td>
                             <td>${wine.bottles || 1}</td>
                         </tr>
                     `;

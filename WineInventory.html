@@ -496,7 +496,7 @@
                     return response.json();
                 })
                 .then(data => {
-                    console.log('Directory data loaded:', data);
+                    console.log('Directory data loaded successfully. First few entries:', data.slice(0, 3));
                     
                     // Handle different data formats
                     if (data.value && Array.isArray(data.value)) {
@@ -517,6 +517,8 @@
                     if (wineData.length === 0) {
                         throw new Error('No wine inventory data found in the directory.');
                     }
+                    
+                    console.log(`Loaded ${wineData.length} collector entries.`);
                     
                     // Update stats
                     updateStats(wineData);
@@ -676,62 +678,76 @@
                 detailModal.style.display = 'flex';
                 document.body.style.overflow = 'hidden'; // Prevent scrolling behind modal
                 
-                // For demonstration purposes, we'll use the Lancaster file we know exists
-                // This allows you to test the functionality with real data
-                const lockerDataUrl = "Table_Lancaster_.json";
-                console.log(`For demo purposes, loading: ${lockerDataUrl} (regardless of which collector was clicked)`);
+                // Convert collector name to correct filename format
+                // Notice the pattern in your files: 
+                // "Ackerman " (with trailing space) becomes "Table_Ackerman_.json"
+                // "Lancaster " (with trailing space) becomes "Table_Lancaster_.json"
                 
-                // Add a note to show this is demo mode
-                inventoryContent.innerHTML = `
-                    <div class="loading">
-                        <div class="loader"></div>
-                        <p>Loading wine inventory data...</p>
-                        <p style="margin-top: 10px; font-size: 14px; color: #666;">
-                            <strong>Demo Mode:</strong> Showing Lancaster data for all collectors
-                        </p>
-                    </div>
-                `;
+                let lockerDataUrl;
+                // If name ends with space, replace it with underscore in filename
+                if (lockerName.endsWith(' ')) {
+                    const nameWithoutTrailingSpace = lockerName.slice(0, -1);
+                    lockerDataUrl = `Table_${nameWithoutTrailingSpace}_.json`;
+                } else {
+                    // For names without trailing space
+                    lockerDataUrl = `Table_${lockerName}.json`;
+                }
                 
-                // Add debug info to help troubleshoot
-                const debugElement = document.createElement('div');
-                debugElement.style.marginTop = '10px';
-                debugElement.style.fontSize = '12px';
-                debugElement.style.color = '#666';
-                debugElement.textContent = `Debug: Trying to load from ${lockerDataUrl}`;
+                console.log(`Attempting to fetch: ${lockerDataUrl}`);
                 
-                // First try with the known working file for demonstration purposes
+                // Try two filename patterns if the first one fails
                 fetch(lockerDataUrl)
                     .then(response => {
                         if (!response.ok) {
-                            throw new Error(`Detailed inventory data not available (Status: ${response.status})`);
+                            // If the first pattern fails, try alternative pattern
+                            const alternativeUrl = lockerName.endsWith(' ') 
+                                ? `Table_${lockerName.trim()}.json`  // Without underscore
+                                : `Table_${lockerName}_.json`;       // With underscore
+                            
+                            console.log(`First attempt failed. Trying alternative: ${alternativeUrl}`);
+                            return fetch(alternativeUrl).then(altResponse => {
+                                if (!altResponse.ok) {
+                                    throw new Error(`Could not load data with either naming pattern`);
+                                }
+                                return altResponse.json();
+                            });
                         }
                         return response.json();
                     })
                     .then(data => {
                         console.log("Successfully loaded data:", data);
-                        debugElement.textContent += " - SUCCESS!";
                         renderLockerDetails(data, lockerName);
                     })
                     .catch(error => {
                         console.error('Error loading detail data:', error);
-                        debugElement.textContent += ` - FAILED: ${error.message}`;
                         
-                        // Show fallback message with Excel link and debug info
-                        inventoryContent.innerHTML = `
-                            <div class="fallback-message">
-                                <p>Detailed inventory data couldn't be loaded for ${lockerName}'s locker.</p>
-                                <p>For this demo, all lookups will display the Lancaster wine collection.</p>
-                                <p class="error-details">Technical details: ${error.message}</p>
-                                <div class="excel-fallback">
-                                    <a href="${excelUrl}" class="excel-btn" target="_blank">
-                                        <i class="fas fa-file-excel"></i> View in Excel Online
-                                    </a>
-                                </div>
-                            </div>
-                        `;
-                        
-                        // Append the debug element to the content
-                        inventoryContent.appendChild(debugElement);
+                        // Fall back to Lancaster for demo purposes
+                        console.log('Falling back to Lancaster data for demo');
+                        fetch('Table_Lancaster_.json')
+                            .then(response => response.json())
+                            .then(fallbackData => {
+                                inventoryContent.innerHTML = `
+                                    <div class="fallback-message">
+                                        <p>Couldn't load data for ${lockerName}'s locker.</p>
+                                        <p class="error-details">Showing Lancaster data as demonstration.</p>
+                                    </div>
+                                `;
+                                renderLockerDetails(fallbackData, lockerName + " (showing Lancaster's data)");
+                            })
+                            .catch(fallbackError => {
+                                // If even the fallback fails, show error
+                                inventoryContent.innerHTML = `
+                                    <div class="fallback-message">
+                                        <p>Could not load wine inventory data.</p>
+                                        <p class="error-details">Error: ${error.message}</p>
+                                        <div class="excel-fallback">
+                                            <a href="${excelUrl}" class="excel-btn" target="_blank">
+                                                <i class="fas fa-file-excel"></i> View in Excel Online
+                                            </a>
+                                        </div>
+                                    </div>
+                                `;
+                            });
                     });
                     });
             }

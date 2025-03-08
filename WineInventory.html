@@ -400,6 +400,12 @@
         .excel-btn:hover {
             background-color: var(--hover-color);
         }
+        
+        .error-details {
+            margin-top: 10px;
+            font-size: 14px;
+            color: #666;
+        }
     </style>
 </head>
 <body>
@@ -686,7 +692,6 @@
                 const lockerDataUrl = `Table_${formattedName}.json`;
                 
                 console.log(`Attempting to fetch: ${lockerDataUrl} for "${lockerName}"`);
-
                 
                 // Fetch the wine data using the consistent naming pattern
                 fetch(lockerDataUrl)
@@ -731,42 +736,6 @@
                                     </div>
                                 `;
                             });
-                    });
-                    .then(data => {
-                        console.log("Successfully loaded data:", data);
-                        renderLockerDetails(data, lockerName);
-                    })
-                    .catch(error => {
-                        console.error('Error loading detail data:', error);
-                        
-                        // Fall back to Lancaster for demo purposes
-                        console.log('Falling back to Lancaster data for demo');
-                        fetch('Table_Lancaster_.json')
-                            .then(response => response.json())
-                            .then(fallbackData => {
-                                inventoryContent.innerHTML = `
-                                    <div class="fallback-message">
-                                        <p>Couldn't load data for ${lockerName}'s locker.</p>
-                                        <p class="error-details">Showing Lancaster data as demonstration.</p>
-                                    </div>
-                                `;
-                                renderLockerDetails(fallbackData, lockerName + " (showing Lancaster's data)");
-                            })
-                            .catch(fallbackError => {
-                                // If even the fallback fails, show error
-                                inventoryContent.innerHTML = `
-                                    <div class="fallback-message">
-                                        <p>Could not load wine inventory data.</p>
-                                        <p class="error-details">Error: ${error.message}</p>
-                                        <div class="excel-fallback">
-                                            <a href="${excelUrl}" class="excel-btn" target="_blank">
-                                                <i class="fas fa-file-excel"></i> View in Excel Online
-                                            </a>
-                                        </div>
-                                    </div>
-                                `;
-                            });
-                    });
                     });
             }
             

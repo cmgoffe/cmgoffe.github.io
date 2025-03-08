@@ -829,6 +829,19 @@
                 inventoryContent.innerHTML = tableHTML;
             }
             
+            // Close the detail modal
+            function closeDetailModal() {
+                detailModal.style.display = 'none';
+                document.body.style.overflow = ''; // Restore scrolling
+            }
+            
+            // Handle escape key to close modal
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape' && detailModal.style.display === 'flex') {
+                    closeDetailModal();
+                }
+            });
+            
             // This function determines wine types based on the name when type isn't specified
             function calculateInventoryStats(wines) {
                 let totalBottles = 0;

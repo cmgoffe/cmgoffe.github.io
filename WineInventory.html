@@ -381,26 +381,6 @@
             margin: 20px 0;
         }
         
-        .excel-fallback {
-            margin-top: 20px;
-            text-align: center;
-        }
-        
-        .excel-btn {
-            display: inline-block;
-            background-color: var(--primary-color);
-            color: white;
-            padding: 10px 20px;
-            border-radius: 5px;
-            text-decoration: none;
-            font-weight: bold;
-            transition: background-color 0.3s;
-        }
-        
-        .excel-btn:hover {
-            background-color: var(--hover-color);
-        }
-        
         .error-details {
             margin-top: 10px;
             font-size: 14px;
@@ -416,7 +396,7 @@
         </header>
         
         <div class="search-container">
-            <input type="text" id="search" placeholder="Search by collector name...">
+            <input type="text" id="search" placeholder="Search by name...">
             <i class="fas fa-search search-icon"></i>
         </div>
         
@@ -488,10 +468,9 @@
             // For this example, we'll use Table_Directory.json as the main directory data
             const directoryUrl = 'Table_Directory.json';
             
-            // Excel Online URL for fallback
-            const excelBaseUrl = 'https://cherryhillscc-my.sharepoint.com/:x:/g/personal/cgoffe_chcc_com/EZjTVOKpz9ZIpsAZ8ky_2OgBGC9b7yg7UN2qHjMQsmEYFA?e=PeG4wq';
-            
             let wineData = [];
+            let totalBottlesCount = 0;
+            let jsonFilesBottleCount = {}; // Store bottle counts from individual JSON files
             
             // Fetch the wine inventory directory data
             fetch(directoryUrl)
@@ -518,6 +497,10 @@
                         }
                     }
                     
+                    // Start loading all individual JSON files
+                    return loadAllBottleCounts(wineData);
+                })
+                .then(() => {
                     loadingEl.style.display = 'none';
                     
                     if (wineData.length === 0) {
@@ -543,6 +526,58 @@
                     errorEl.textContent = `Error: ${error.message}`;
                     console.error('Error:', error);
                 });
+            
+            // Load all JSON files to get total bottle counts
+            function loadAllBottleCounts(data) {
+                const promises = [];
+                
+                data.forEach(locker => {
+                    const collectorName = locker["Sheet Name"] || "Unknown";
+                    const formattedName = collectorName.replace(/\s+/g, '_');
+                    const lockerDataUrl = `Table_${formattedName}.json`;
+                    
+                    const promise = fetch(lockerDataUrl)
+                        .then(response => {
+                            if (!response.ok) {
+                                console.warn(`Could not load data file for ${collectorName}, using directory count`);
+                                // Use the count from the directory as a fallback
+                                const bottleCount = locker["_x0023_ bottles"] || 
+                                                 locker["# bottles"] || 
+                                                 locker["Bottles"] || 
+                                                 0;
+                                jsonFilesBottleCount[collectorName] = Number(bottleCount) || 0;
+                                return null;
+                            }
+                            return response.json();
+                        })
+                        .then(jsonData => {
+                            if (jsonData) {
+                                // Calculate total bottles directly from the JSON data
+                                let bottlesCount = 0;
+                                jsonData.forEach(item => {
+                                    bottlesCount += Number(item.Bottles) || 1;
+                                });
+                                jsonFilesBottleCount[collectorName] = bottlesCount;
+                                
+                                // Keep a running total
+                                totalBottlesCount += bottlesCount;
+                            }
+                        })
+                        .catch(error => {
+                            console.error(`Error loading JSON for ${collectorName}:`, error);
+                            // Use directory count as fallback
+                            const bottleCount = locker["_x0023_ bottles"] || 
+                                             locker["# bottles"] || 
+                                             locker["Bottles"] || 
+                                             0;
+                            jsonFilesBottleCount[collectorName] = Number(bottleCount) || 0;
+                        });
+                    
+                    promises.push(promise);
+                });
+                
+                return Promise.all(promises);
+            }
             
             // Search functionality
             searchEl.addEventListener('input', function() {
@@ -582,22 +617,11 @@
                 
                 const totalLockers = data.length;
                 
-                // Calculate total bottles
-                let totalBottles = 0;
-                for (let i = 0; i < data.length; i++) {
-                    const bottleCount = data[i]["_x0023_ bottles"] || 
-                                      data[i]["# bottles"] || 
-                                      data[i]["Bottles"] || 
-                                      0;
-                    
-                    totalBottles += Number(bottleCount) || 0;
-                }
-                
-                // Calculate average bottles per locker
-                const avgBottles = totalLockers > 0 ? Math.round(totalBottles / totalLockers) : 0;
+                // Use totalBottlesCount which is calculated from individual JSON files
+                const avgBottles = totalLockers > 0 ? Math.round(totalBottlesCount / totalLockers) : 0;
                 
                 totalLockersEl.textContent = totalLockers;
-                totalBottlesEl.textContent = totalBottles;
+                totalBottlesEl.textContent = totalBottlesCount;
                 avgBottlesEl.textContent = avgBottles;
             }
             
@@ -617,14 +641,8 @@
                     // Get the collector name from "Sheet Name" property
                     const collectorName = locker["Sheet Name"] || "Unknown";
                     
-                    // Get bottle count
-                    const bottleCount = locker["_x0023_ bottles"] || 
-                                      locker["# bottles"] || 
-                                      locker["Bottles"] || 
-                                      0;
-                    
-                    // Excel fallback URL for this specific sheet
-                    const excelSheetUrl = `${excelBaseUrl}&activeCell=${encodeURIComponent(collectorName)}!A1`;
+                    // Get bottle count from the individually loaded JSON files
+                    const bottleCount = jsonFilesBottleCount[collectorName] || 0;
                     
                     card.innerHTML = `
                         <div class="card-header">
@@ -636,11 +654,8 @@
                             <div class="bottle-label">bottles</div>
                         </div>
                         <div class="card-footer">
-                            <a class="view-link view-detail" data-name="${collectorName}" data-excel="${excelSheetUrl}">
+                            <a class="view-link view-detail" data-name="${collectorName}">
                                 View Details <i class="fas fa-search-plus"></i>
-                            </a>
-                            <a href="${excelSheetUrl}" class="view-link" target="_blank">
-                                Open in Excel <i class="fas fa-external-link-alt"></i>
                             </a>
                         </div>
                     `;
@@ -651,8 +666,7 @@
                         e.preventDefault();
                         e.stopPropagation();
                         const lockerName = this.getAttribute('data-name');
-                        const excelUrl = this.getAttribute('data-excel');
-                        showLockerDetails(lockerName, excelUrl);
+                        showLockerDetails(lockerName);
                     });
                     
                     // Make whole card clickable to view details
@@ -668,7 +682,7 @@
             }
             
             // Show locker details
-            function showLockerDetails(lockerName, excelUrl) {
+            function showLockerDetails(lockerName) {
                 modalCollectorName.textContent = lockerName;
                 
                 // Clear previous content
@@ -683,9 +697,6 @@
                 // Show the modal
                 detailModal.style.display = 'flex';
                 document.body.style.overflow = 'hidden'; // Prevent scrolling behind modal
-                
-                // Convert collector name to correct filename format based on clarified convention:
-                // "Table_*Sheet_Name*.json with "_" in place of ANY spaces, including leading/trailing
                 
                 // Replace all spaces with underscores for the filename
                 const formattedName = lockerName.replace(/\s+/g, '_');
@@ -709,33 +720,13 @@
                     .catch(error => {
                         console.error('Error loading detail data:', error);
                         
-                        // Fall back to Lancaster for demo purposes
-                        console.log('Falling back to Lancaster data for demo');
-                        fetch('Table_Lancaster_.json')
-                            .then(response => response.json())
-                            .then(fallbackData => {
-                                inventoryContent.innerHTML = `
-                                    <div class="fallback-message">
-                                        <p>Couldn't load data for ${lockerName}'s locker.</p>
-                                        <p class="error-details">Showing Lancaster data as demonstration.</p>
-                                    </div>
-                                `;
-                                renderLockerDetails(fallbackData, lockerName + " (showing Lancaster's data)");
-                            })
-                            .catch(fallbackError => {
-                                // If even the fallback fails, show error
-                                inventoryContent.innerHTML = `
-                                    <div class="fallback-message">
-                                        <p>Could not load wine inventory data.</p>
-                                        <p class="error-details">Error: ${error.message}</p>
-                                        <div class="excel-fallback">
-                                            <a href="${excelUrl}" class="excel-btn" target="_blank">
-                                                <i class="fas fa-file-excel"></i> View in Excel Online
-                                            </a>
-                                        </div>
-                                    </div>
-                                `;
-                            });
+                        // Show error message
+                        inventoryContent.innerHTML = `
+                            <div class="fallback-message">
+                                <p>Couldn't load data for ${lockerName}'s locker.</p>
+                                <p class="error-details">Error: ${error.message}</p>
+                            </div>
+                        `;
                     });
             }
             
@@ -896,19 +887,6 @@
                     avgYear
                 };
             }
-            
-            // Close the detail modal
-            function closeDetailModal() {
-                detailModal.style.display = 'none';
-                document.body.style.overflow = ''; // Restore scrolling
-            }
-            
-            // Handle escape key to close modal
-            document.addEventListener('keydown', function(e) {
-                if (e.key === 'Escape' && detailModal.style.display === 'flex') {
-                    closeDetailModal();
-                }
-            });
         });
     </script>
 </body>

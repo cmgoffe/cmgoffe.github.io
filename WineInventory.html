@@ -1,44 +1,4 @@
-// Function to calculate inventory statistics
-            function calculateInventoryStats(wines) {
-                let totalBottles = 0;
-                let redWines = 0;
-                let whiteWines = 0;
-                let otherWines = 0;
-                
-                wines.forEach(wine => {
-                    const bottles = Number(wine.bottles) || 0;
-                    totalBottles += bottles;
-                    
-                    // Try to infer wine type from name if type is not directly provided
-                    const wineName = (wine.name || '').toLowerCase();
-                    
-                    // Check for wine types in the name
-                    if (wineName.includes('cabernet') || 
-                        wineName.includes('merlot') || 
-                        wineName.includes('pinot noir') || 
-                        wineName.includes('syrah') || 
-                        wineName.includes('shiraz') || 
-                        wineName.includes('zinfandel') ||
-                        wineName.includes('red blend')) {
-                        redWines += bottles;
-                    } else if (wineName.includes('chardonnay') || 
-                              wineName.includes('sauvignon blanc') || 
-                              wineName.includes('pinot grigio') || 
-                              wineName.includes('riesling') || 
-                              wineName.includes('white blend')) {
-                        whiteWines += bottles;
-                    } else {
-                        otherWines += bottles;
-                    }
-                });
-                
-                return {
-                    totalBottles,
-                    redWines,
-                    whiteWines,
-                    otherWines
-                };
-            }<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -115,31 +75,6 @@
             right: 15px;
             top: 12px;
             color: #888;
-        }
-        
-        .stats {
-            display: flex;
-            justify-content: space-around;
-            margin-bottom: 30px;
-            padding: 15px;
-            background-color: white;
-            border-radius: 8px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-        }
-        
-        .stat-item {
-            text-align: center;
-        }
-        
-        .stat-value {
-            font-size: 1.8rem;
-            font-weight: bold;
-            color: var(--primary-color);
-        }
-        
-        .stat-label {
-            font-size: 0.9rem;
-            color: #666;
         }
         
         .directory {
@@ -478,7 +413,6 @@
             const errorEl = document.getElementById('error');
             const searchEl = document.getElementById('search');
             const updatedTimeEl = document.getElementById('updated-time');
-            // Stats elements removed
             
             // Modal elements
             const detailModal = document.getElementById('detail-modal');
@@ -493,6 +427,48 @@
             let wineData = [];
             let totalBottlesCount = 0;
             let jsonFilesBottleCount = {}; // Store bottle counts from individual JSON files
+            
+            // Function to calculate inventory statistics
+            function calculateInventoryStats(wines) {
+                let totalBottles = 0;
+                let redWines = 0;
+                let whiteWines = 0;
+                let otherWines = 0;
+                
+                wines.forEach(wine => {
+                    const bottles = Number(wine.bottles) || 0;
+                    totalBottles += bottles;
+                    
+                    // Try to infer wine type from name if type is not directly provided
+                    const wineName = (wine.name || '').toLowerCase();
+                    
+                    // Check for wine types in the name
+                    if (wineName.includes('cabernet') || 
+                        wineName.includes('merlot') || 
+                        wineName.includes('pinot noir') || 
+                        wineName.includes('syrah') || 
+                        wineName.includes('shiraz') || 
+                        wineName.includes('zinfandel') ||
+                        wineName.includes('red blend')) {
+                        redWines += bottles;
+                    } else if (wineName.includes('chardonnay') || 
+                               wineName.includes('sauvignon blanc') || 
+                               wineName.includes('pinot grigio') || 
+                               wineName.includes('riesling') || 
+                               wineName.includes('white blend')) {
+                        whiteWines += bottles;
+                    } else {
+                        otherWines += bottles;
+                    }
+                });
+                
+                return {
+                    totalBottles,
+                    redWines,
+                    whiteWines,
+                    otherWines
+                };
+            }
             
             // Fetch the wine inventory directory data
             fetch(directoryUrl)
@@ -560,8 +536,6 @@
                         return lastNameA.localeCompare(lastNameB);
                     });
                     
-                    // Stats section removed as requested
-                    
                     // Render directory
                     renderDirectory(wineData);
                     
@@ -610,7 +584,6 @@
                             return response.json();
                         })
                         .then(jsonData => {
-                            if (jsonData) {
                             // Calculate total bottles directly from the JSON data
                             if (jsonData && Array.isArray(jsonData)) {
                                 let bottlesCount = 0;
@@ -621,7 +594,6 @@
                                 
                                 // Keep a running total
                                 totalBottlesCount += bottlesCount;
-                            }
                             }
                         })
                         .catch(error => {
@@ -669,7 +641,16 @@
                 }
             });
             
-            // Update statistics function removed as requested
+            // Calculate total bottles for a locker
+            function calculateTotalBottles(wines) {
+                let total = 0;
+                if (Array.isArray(wines)) {
+                    wines.forEach(wine => {
+                        total += Number(wine.Bottles) || 0;
+                    });
+                }
+                return total;
+            }
             
             // Render the directory cards
             function renderDirectory(data) {
@@ -733,7 +714,7 @@
                 });
             }
             
-                            // Show locker details
+            // Show locker details
             function showLockerDetails(lockerName) {
                 modalCollectorName.textContent = lockerName;
                 
@@ -793,26 +774,16 @@
                     return;
                 }
                 
-                console.log("Raw wine data to process:", data);
-                
                 // Process the wines data from the Table JSON format
                 const wines = data.map(item => {
-                    // Log each item to see its structure
-                    console.log("Processing wine item:", item);
-                    
+                    // Create a consistent format for display
                     return {
                         name: item.Wine || 'Unknown',
                         varietal: item.Varietal || 'N/A',
                         year: item.Year || 'N/A',
-                        bottles: item.Bottles || 1,
-                        // These fields may not exist in your current data, 
-                        // but the structure allows for future enhancement
-                        type: item.Type || 'Wine',
-                        region: item.Region || 'N/A'
+                        bottles: Number(item.Bottles) || 0
                     };
                 });
-                
-                console.log("Processed wine data:", wines);
                 
                 // Calculate stats from the wines array
                 const stats = calculateInventoryStats(wines);
@@ -863,7 +834,7 @@
                             <td>${wine.name || 'Unknown'}</td>
                             <td>${wine.varietal || 'N/A'}</td>
                             <td>${wine.year || 'N/A'}</td>
-                            <td>${wine.bottles || 1}</td>
+                            <td>${wine.bottles || 0}</td>
                         </tr>
                     `;
                 });
@@ -889,17 +860,6 @@
                     closeDetailModal();
                 }
             });
-            
-                            // Calculate total bottles for a locker
-                function calculateTotalBottles(wines) {
-                    let total = 0;
-                    if (Array.isArray(wines)) {
-                        wines.forEach(wine => {
-                            total += Number(wine.Bottles) || 0;
-                        });
-                    }
-                    return total;
-                }
         });
     </script>
 </body>

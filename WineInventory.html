@@ -1,4 +1,44 @@
-<!DOCTYPE html>
+// This function determines wine types based on the name when type isn't specified
+            function calculateInventoryStats(wines) {
+                let totalBottles = 0;
+                let redWines = 0;
+                let whiteWines = 0;
+                let otherWines = 0;
+                
+                wines.forEach(wine => {
+                    const bottles = Number(wine.bottles) || 1;
+                    totalBottles += bottles;
+                    
+                    // Try to infer wine type from name if type is not directly provided
+                    const wineName = wine.name.toLowerCase();
+                    
+                    // Check for wine types in the name
+                    if (wineName.includes('cabernet') || 
+                        wineName.includes('merlot') || 
+                        wineName.includes('pinot noir') || 
+                        wineName.includes('syrah') || 
+                        wineName.includes('shiraz') || 
+                        wineName.includes('zinfandel') ||
+                        wineName.includes('red blend')) {
+                        redWines += bottles;
+                    } else if (wineName.includes('chardonnay') || 
+                              wineName.includes('sauvignon blanc') || 
+                              wineName.includes('pinot grigio') || 
+                              wineName.includes('riesling') || 
+                              wineName.includes('white blend')) {
+                        whiteWines += bottles;
+                    } else {
+                        otherWines += bottles;
+                    }
+                });
+                
+                return {
+                    totalBottles,
+                    redWines,
+                    whiteWines,
+                    otherWines
+                };
+            }<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -465,7 +505,7 @@
                     return response.json();
                 })
                 .then(data => {
-                    console.log('Directory data loaded successfully. First few entries:', data.slice(0, 3));
+                    console.log('Directory data loaded successfully:', data);
                     
                     // Handle different data formats
                     if (data.value && Array.isArray(data.value)) {
@@ -474,7 +514,9 @@
                         wineData = data;
                     } else {
                         try {
+                            // Try to convert to array if it's an object
                             wineData = Object.values(data);
+                            console.log('Converted data to array:', wineData.slice(0, 3));
                         } catch (e) {
                             console.error('Could not convert data to array:', e);
                             wineData = [];
@@ -486,6 +528,12 @@
                 })
                 .then(() => {
                     loadingEl.style.display = 'none';
+                    
+                    // Check if data is an array
+                    if (!Array.isArray(wineData)) {
+                        console.error('Wine data is not an array:', wineData);
+                        throw new Error('Data format error: Expected an array of wine lockers');
+                    }
                     
                     if (wineData.length === 0) {
                         throw new Error('No wine inventory data found in the directory.');
@@ -526,12 +574,22 @@
                 .catch(error => {
                     loadingEl.style.display = 'none';
                     errorEl.style.display = 'block';
-                    errorEl.textContent = `Error: ${error.message}`;
-                    console.error('Error:', error);
+                    errorEl.innerHTML = `
+                        <p>Error: ${error.message}</p>
+                        <p style="font-size: 0.9em; margin-top: 10px;">
+                            Check browser console for more details. Make sure Table_Directory.json exists and contains valid data.
+                        </p>
+                    `;
+                    console.error('Error loading data:', error);
                 });
             
             // Load all JSON files to get total bottle counts
             function loadAllBottleCounts(data) {
+                if (!Array.isArray(data)) {
+                    console.error('Cannot load bottle counts: data is not an array');
+                    return Promise.resolve(); // Return a resolved promise to continue the chain
+                }
+                
                 const promises = [];
                 
                 data.forEach(locker => {
@@ -555,15 +613,17 @@
                         })
                         .then(jsonData => {
                             if (jsonData) {
-                                // Calculate total bottles directly from the JSON data
+                            // Calculate total bottles directly from the JSON data
+                            if (jsonData && Array.isArray(jsonData)) {
                                 let bottlesCount = 0;
                                 jsonData.forEach(item => {
-                                    bottlesCount += Number(item.Bottles) || 1;
+                                    bottlesCount += Number(item.Bottles) || 0;
                                 });
                                 jsonFilesBottleCount[collectorName] = bottlesCount;
                                 
                                 // Keep a running total
                                 totalBottlesCount += bottlesCount;
+                            }
                             }
                         })
                         .catch(error => {
@@ -616,6 +676,12 @@
             // Render the directory cards
             function renderDirectory(data) {
                 directoryEl.innerHTML = '';
+                
+                if (!Array.isArray(data)) {
+                    console.error('Cannot render directory: data is not an array');
+                    directoryEl.innerHTML = '<div class="error">Error: Invalid data format. Please check the console for details.</div>';
+                    return;
+                }
                 
                 if (data.length === 0) {
                     directoryEl.innerHTML = '<div class="no-results">No wine lockers found matching your search.</div>';
@@ -826,60 +892,16 @@
                 }
             });
             
-            // This function determines wine types based on the name when type isn't specified
-            function calculateInventoryStats(wines) {
-                let totalBottles = 0;
-                let redWines = 0;
-                let whiteWines = 0;
-                let otherWines = 0;
-                let totalYears = 0;
-                let yearCount = 0;
-                
-                wines.forEach(wine => {
-                    const bottles = Number(wine.bottles) || 1;
-                    totalBottles += bottles;
-                    
-                    // Try to infer wine type from name if type is not directly provided
-                    const wineName = wine.name.toLowerCase();
-                    const type = wine.type ? wine.type.toLowerCase() : '';
-                    
-                    // Check for wine types in the name when not provided directly
-                    if (type.includes('red') || 
-                        wineName.includes('cabernet') || 
-                        wineName.includes('merlot') || 
-                        wineName.includes('pinot noir') || 
-                        wineName.includes('syrah') || 
-                        wineName.includes('shiraz') || 
-                        wineName.includes('zinfandel') ||
-                        wineName.includes('red blend')) {
-                        redWines += bottles;
-                    } else if (type.includes('white') || 
-                              wineName.includes('chardonnay') || 
-                              wineName.includes('sauvignon blanc') || 
-                              wineName.includes('pinot grigio') || 
-                              wineName.includes('riesling') || 
-                              wineName.includes('white blend')) {
-                        whiteWines += bottles;
-                    } else {
-                        otherWines += bottles;
+                            // Calculate total bottles for a locker
+                function calculateTotalBottles(wines) {
+                    let total = 0;
+                    if (Array.isArray(wines)) {
+                        wines.forEach(wine => {
+                            total += Number(wine.Bottles) || 0;
+                        });
                     }
-                    
-                    if (wine.year && !isNaN(wine.year)) {
-                        totalYears += Number(wine.year) * bottles;
-                        yearCount += bottles;
-                    }
-                });
-                
-                const avgYear = yearCount > 0 ? Math.round(totalYears / yearCount) : null;
-                
-                return {
-                    totalBottles,
-                    redWines,
-                    whiteWines,
-                    otherWines,
-                    avgYear
-                };
-            }
+                    return total;
+                }
         });
     </script>
 </body>

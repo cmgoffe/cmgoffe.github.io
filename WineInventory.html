@@ -718,10 +718,10 @@
                     return {
                         name: item.Wine || 'Unknown',
                         varietal: item.Varietal || 'N/A',
+                        year: item.Year || 'N/A',
                         bottles: item.Bottles || 1,
                         // These fields may not exist in your current data, 
                         // but the structure allows for future enhancement
-                        year: item.Year || 'N/A',
                         type: item.Type || 'Wine',
                         region: item.Region || 'N/A'
                     };
@@ -764,6 +764,7 @@
                                 <tr>
                                     <th>Wine</th>
                                     <th>Varietal</th>
+                                    <th>Year</th>
                                     <th>Bottles</th>
                                 </tr>
                             </thead>
@@ -776,6 +777,7 @@
                         <tr>
                             <td>${wine.name || 'Unknown'}</td>
                             <td>${wine.varietal || 'N/A'}</td>
+                            <td>${wine.year || 'N/A'}</td>
                             <td>${wine.bottles || 1}</td>
                         </tr>
                     `;

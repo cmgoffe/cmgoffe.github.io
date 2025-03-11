@@ -1,4 +1,4 @@
-// This function determines wine types based on the name when type isn't specified
+// Function to calculate inventory statistics
             function calculateInventoryStats(wines) {
                 let totalBottles = 0;
                 let redWines = 0;
@@ -6,11 +6,11 @@
                 let otherWines = 0;
                 
                 wines.forEach(wine => {
-                    const bottles = Number(wine.bottles) || 1;
+                    const bottles = Number(wine.bottles) || 0;
                     totalBottles += bottles;
                     
                     // Try to infer wine type from name if type is not directly provided
-                    const wineName = wine.name.toLowerCase();
+                    const wineName = (wine.name || '').toLowerCase();
                     
                     // Check for wine types in the name
                     if (wineName.includes('cabernet') || 
@@ -439,8 +439,6 @@
             <input type="text" id="search" placeholder="Search by name...">
             <i class="fas fa-search search-icon"></i>
         </div>
-        
-        <!-- Summary stats block removed as requested -->
         
         <div id="loading" class="loading">
             <div class="loader"></div>

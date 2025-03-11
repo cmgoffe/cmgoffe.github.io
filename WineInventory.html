@@ -493,6 +493,27 @@
                     
                     console.log(`Loaded ${wineData.length} collector entries.`);
                     
+                    // Sort the data alphabetically by last name
+                    wineData.sort((a, b) => {
+                        const nameA = a["Sheet Name"] || "";
+                        const nameB = b["Sheet Name"] || "";
+                        
+                        // Function to extract last name
+                        const getLastName = (name) => {
+                            // For format like "J. Smith" or "John Smith"
+                            const parts = name.split(' ');
+                            if (parts.length > 1) {
+                                return parts[parts.length - 1]; // Get the last part as last name
+                            }
+                            return name; // If only one part, use the whole name
+                        };
+                        
+                        const lastNameA = getLastName(nameA);
+                        const lastNameB = getLastName(nameB);
+                        
+                        return lastNameA.localeCompare(lastNameB);
+                    });
+                    
                     // Stats section removed as requested
                     
                     // Render directory
@@ -648,7 +669,7 @@
                 });
             }
             
-            // Show locker details
+                            // Show locker details
             function showLockerDetails(lockerName) {
                 modalCollectorName.textContent = lockerName;
                 

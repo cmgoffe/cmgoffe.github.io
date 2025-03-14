@@ -341,13 +341,12 @@
         }
         .wine-category-header {
             background-color: #f0f0f0;
-            padding: 6px 15px;
+            padding: 2px 15px;
             font-weight: bold;
             border-bottom: 1px solid #ddd;
             color: #722F37;
-            margin-top: 15px;
+            margin-top: 10px;
             font-size: 0.95rem;
-            text-transform: uppercase; /* This makes the category names stand out */
             letter-spacing: 0.5px;     /* Slight spacing between letters for better readability */
         }
         
@@ -899,7 +898,7 @@
                 `;
                 tableHTML += `
                     <tr>
-                        <td colspan="4" class="wine-category-header">Whites</td>
+                        <td colspan="4" class="wine-category-header" style="border: 2px solid red;">White(${groupedWines['White'].length</td>
                     </tr>
                 `;
 
@@ -919,7 +918,7 @@
                 if (groupedWines['Red'].length > 0) {
                     tableHTML += `
                         <tr>
-                            <td colspan="4" class="wine-category-header">Reds</td>
+                            <td colspan="4" class="wine-category-header">Red</td>
                         </tr>
                     `;
         
@@ -938,7 +937,7 @@
                 if (groupedWines['Other'].length > 0) {
                     tableHTML += `
                         <tr>
-                            <td colspan="4" class="wine-category-header">Others</td>
+                            <td colspan="4" class="wine-category-header">Other</td>
                         </tr>
                     `;
         

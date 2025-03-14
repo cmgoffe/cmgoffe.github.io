@@ -347,6 +347,7 @@
             color: #722F37;
             margin-top: 10px;
             font-size: 0.95rem;
+            height: 20px;
             letter-spacing: 0.5px;     /* Slight spacing between letters for better readability */
         }
         
@@ -896,12 +897,17 @@
                             </thead>
                             <tbody>
                 `;
+                
+                // spacer row to properly display "White" header
+                tableHTML += `
+                    <tr class="spacer-row"><td colspan="4"></td></tr>
+                `;
 
 
                 if (groupedWines['White'].length > 0) {
                     tableHTML += `
                         <tr>
-                            <th colspan="4" class="wine-category-header;">White</th>
+                            <td colspan="4" class="wine-category-header;">White</td>
                         </tr>
                     `;
                     groupedWines['White'].forEach(wine => {

@@ -896,13 +896,14 @@
                             </thead>
                             <tbody>
                 `;
-                tableHTML += `
-                    <tr>
-                        <td colspan="4" class="wine-category-header" style="border: 2px solid red;">White</td>
-                    </tr>
-                `;
+
 
                 if (groupedWines['White'].length > 0) {
+                    tableHTML += `
+                        <tr>
+                            <th colspan="4" class="wine-category-header;">White</th>
+                        </tr>
+                    `;
                     groupedWines['White'].forEach(wine => {
                         tableHTML += `
                             <tr>

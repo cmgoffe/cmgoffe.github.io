@@ -333,11 +333,12 @@
         }
         .wine-group-header {
             background-color: #f0f0f0;
-            padding: 10px 15px;
+            padding: 6px 15px;
             font-weight: bold;
             border-bottom: 1px solid #ddd;
             color: #722F37;
-            margin-top: 20px;
+            margin-top: 15px;
+            font-size: 0.95rem;
         }
         
         /* Responsive adjustments */
@@ -835,12 +836,15 @@
                         type: type
                     };
                 });
-
+                
                 const groupedWines = {
                     'White': wines.filter(wine => wine.type === 'White'),
                     'Red': wines.filter(wine => wine.type === 'Red'),
                     'Other': wines.filter(wine => wine.type === 'Other')
                 };  
+
+
+                groupWines['Other'].sort((a,b) => a.name.localeCompare(b.name));
                 
                 // Calculate stats from the wines array
                 const stats = calculateInventoryStats(wines);
@@ -884,7 +888,8 @@
                             <tbody>
                 `;
 
-                 if (groupedWines['White'].length > 0) {
+
+                if (groupedWines['White'].length > 0) {
                     tableHTML += `
                         <tr>
                             <td colspan="4" class="wine-group-header">White Wines</td>

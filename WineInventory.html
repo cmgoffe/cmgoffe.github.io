@@ -449,9 +449,11 @@
                     })
                     .then(data => {
                         if (!data) return;
+
+                        const varietalsList = data.value || data;
                 
                 // Create a mapping from varietal name to type
-                        data.forEach(item => {
+                        varietalsList.forEach(item => {
                             if (item.Varietal) {
                         // Store in lowercase for case-insensitive matching
                                 varietalTypeMap[item.Varietal.toLowerCase()] = item.Type || 'Other';
@@ -468,7 +470,7 @@
     // ADD THIS PART - Add function to get wine type from varietal
             function getWineType(varietal) {
         // If we have a varietal, try to look it up in our mapping
-                if (varietal && varietal !== 'N/A') {
+                if (varietal && varietal.trim() !== '' && varietal !== 'N/A') {
                     const type = varietalTypeMap[varietal.toLowerCase()];
                     if (type) {
                         return type;
@@ -480,7 +482,6 @@
             }
             
             // Function to calculate inventory statistics
-// REPLACE with this updated function
             function calculateInventoryStats(wines) {
                 let totalBottles = 0;
                 let redWines = 0;
@@ -512,7 +513,12 @@
             }
             
             // Fetch the wine inventory directory data
-            fetch(directoryUrl)
+// First load the varietal mapping, then proceed with the rest
+            loadVarietalMapping()
+                .then(() => {
+                    console.log('Varietal mapping loaded, proceeding with directory data');
+                    return fetch(directoryUrl);
+                })
                 .then(response => {
                     if (!response.ok) {
                         throw new Error('Failed to load directory data. Please ensure Table_Directory.json exists.');
@@ -590,7 +596,7 @@
                     errorEl.innerHTML = `
                         <p>Error: ${error.message}</p>
                         <p style="font-size: 0.9em; margin-top: 10px;">
-                            Check browser console for more details. Make sure Table_Directory.json exists and contains valid data.
+                            Check browser console for more details.
                         </p>
                     `;
                     console.error('Error loading data:', error);

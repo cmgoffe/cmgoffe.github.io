@@ -856,12 +856,12 @@
                         <div class="stat-number">${stats.totalBottles || 0}</div>
                     </div>
                     <div class="inventory-stat">
-                        <div class="stat-title">Red</div>
-                        <div class="stat-number">${stats.redWines || 0}</div>
-                    </div>
-                    <div class="inventory-stat">
                         <div class="stat-title">White</div>
                         <div class="stat-number">${stats.whiteWines || 0}</div>
+                    </div>
+                    <div class="inventory-stat">
+                        <div class="stat-title">Red</div>
+                        <div class="stat-number">${stats.redWines || 0}</div>
                     </div>
                     <div class="inventory-stat">
                         <div class="stat-title">Other</div>
@@ -887,15 +887,13 @@
                             </thead>
                             <tbody>
                 `;
-
+                tableHTML += `
+                    <tr>
+                        <td colspan="4" class="wine-group-header">White Wines</td>
+                    </tr>
+                `;
 
                 if (groupedWines['White'].length > 0) {
-                    tableHTML += `
-                        <tr>
-                            <td colspan="4" class="wine-group-header">White Wines</td>
-                        </tr>
-                    `;
-        
                     groupedWines['White'].forEach(wine => {
                         tableHTML += `
                             <tr>

@@ -339,16 +339,17 @@
             color: #722F37;
             margin-top: 15px;
         }
-        .wine-category-header {
-            background-color: #f0f0f0;
-            padding: 2px 15px;
-            font-weight: bold;
-            border-bottom: 1px solid #ddd;
-            color: #722F37;
-            margin-top: 10px;
-            font-size: 0.95rem;
-            height: 20px;
-            letter-spacing: 0.5px;     /* Slight spacing between letters for better readability */
+        .category-row td {
+          padding: 5px 0;
+          background-color: #f8f0f1; /* Light background */
+        }
+        
+        .wine-category-label {
+          color: #722F37; /* Wine-themed color */
+          font-weight: bold;
+          font-size: 14px;
+          line-height: 1.2;
+          padding-left: 10px;
         }
         
         /* Responsive adjustments */
@@ -898,16 +899,13 @@
                             <tbody>
                 `;
                 
-                // spacer row to properly display "White" header
-                tableHTML += `
-                    <tr class="spacer-row"><td colspan="4"></td></tr>
-                `;
-
 
                 if (groupedWines['White'].length > 0) {
                     tableHTML += `
-                        <tr>
-                            <td colspan="4" class="wine-category-header;">White</td>
+                        <tr class="category-row">
+                          <td colspan="4">
+                            <div class="wine-category-label">Red Wines</div>
+                          </td>
                         </tr>
                     `;
                     groupedWines['White'].forEach(wine => {

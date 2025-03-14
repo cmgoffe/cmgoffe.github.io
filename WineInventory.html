@@ -331,6 +331,14 @@
             padding: 30px;
             color: #666;
         }
+        .wine-group-header {
+            background-color: #f0f0f0;
+            padding: 10px 15px;
+            font-weight: bold;
+            border-bottom: 1px solid #ddd;
+            color: #722F37;
+            margin-top: 20px;
+        }
         
         /* Responsive adjustments */
         @media (max-width: 768px) {
@@ -427,41 +435,74 @@
             let wineData = [];
             let totalBottlesCount = 0;
             let jsonFilesBottleCount = {}; // Store bottle counts from individual JSON files
+            let varietalTypeMap = {}; // Global variable to store the varietal mapping
+
+
+            function loadVarietalMapping() {
+                return fetch('winevarietals.json')
+                    .then(response => {
+                        if (!response.ok) {
+                            console.warn('Could not load varietal mapping data.');
+                            return null;
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        if (!data) return;
+                
+                // Create a mapping from varietal name to type
+                        data.forEach(item => {
+                            if (item.Varietal) {
+                        // Store in lowercase for case-insensitive matching
+                                varietalTypeMap[item.Varietal.toLowerCase()] = item.Type || 'Other';
+                            }
+                        });
+                
+                        console.log('Loaded varietal mappings:', Object.keys(varietalTypeMap).length);
+                    })
+                    .catch(error => {
+                        console.error('Error loading varietal data:', error);
+                    });
+            }
+    
+    // ADD THIS PART - Add function to get wine type from varietal
+            function getWineType(varietal) {
+        // If we have a varietal, try to look it up in our mapping
+                if (varietal && varietal !== 'N/A') {
+                    const type = varietalTypeMap[varietal.toLowerCase()];
+                    if (type) {
+                        return type;
+                    }
+                }
+        
+        // If not found, return "Other" as default
+                return 'Other';
+            }
             
             // Function to calculate inventory statistics
+// REPLACE with this updated function
             function calculateInventoryStats(wines) {
                 let totalBottles = 0;
                 let redWines = 0;
                 let whiteWines = 0;
                 let otherWines = 0;
-                
+    
                 wines.forEach(wine => {
                     const bottles = Number(wine.bottles) || 0;
                     totalBottles += bottles;
-                    
-                    // Try to infer wine type from name if type is not directly provided
-                    const wineName = (wine.name || '').toLowerCase();
-                    
-                    // Check for wine types in the name
-                    if (wineName.includes('cabernet') || 
-                        wineName.includes('merlot') || 
-                        wineName.includes('pinot noir') || 
-                        wineName.includes('syrah') || 
-                        wineName.includes('shiraz') || 
-                        wineName.includes('zinfandel') ||
-                        wineName.includes('red blend')) {
+        
+        // Use our classification function
+                    const wineType = wine.type;
+        
+                    if (wineType === 'Red') {
                         redWines += bottles;
-                    } else if (wineName.includes('chardonnay') || 
-                               wineName.includes('sauvignon blanc') || 
-                               wineName.includes('pinot grigio') || 
-                               wineName.includes('riesling') || 
-                               wineName.includes('white blend')) {
+                    } else if (wineType === 'White') {
                         whiteWines += bottles;
                     } else {
                         otherWines += bottles;
                     }
                 });
-                
+    
                 return {
                     totalBottles,
                     redWines,
@@ -776,14 +817,24 @@
                 
                 // Process the wines data from the Table JSON format
                 const wines = data.map(item => {
+                    const wineName = (item.Wine || '').trim();
+                    const varietal = (item.Varietal || '').trim();
+                    const type = getWineType(varietal);
                     // Create a consistent format for display
                     return {
-                        name: item.Wine || 'Unknown',
-                        varietal: item.Varietal || 'N/A',
+                        name: wineName,
+                        varietal: varietal || 'N/A',
                         year: item.Year || 'N/A',
-                        bottles: Number(item.Bottles) || 0
+                        bottles: Number(item.Bottles) || 0,
+                        type: type
                     };
                 });
+
+                const groupedWines = {
+                    'White': wines.filter(wine => wine.type === 'White'),
+                    'Red': wines.filter(wine => wine.type === 'Red'),
+                    'Other': wines.filter(wine => wine.type === 'Other')
+                };  
                 
                 // Calculate stats from the wines array
                 const stats = calculateInventoryStats(wines);
@@ -826,19 +877,64 @@
                             </thead>
                             <tbody>
                 `;
-                
-                wines.forEach(wine => {
-                    // For each wine, create a row
+
+                 if (groupedWines['White'].length > 0) {
                     tableHTML += `
                         <tr>
-                            <td>${wine.name || 'Unknown'}</td>
-                            <td>${wine.varietal || 'N/A'}</td>
-                            <td>${wine.year || 'N/A'}</td>
-                            <td>${wine.bottles || 0}</td>
+                            <td colspan="4" class="wine-group-header">White Wines</td>
                         </tr>
                     `;
-                });
-                
+        
+                    groupedWines['White'].forEach(wine => {
+                        tableHTML += `
+                            <tr>
+                                <td>${wine.name || 'Unknown'}</td>
+                                <td>${wine.varietal || 'N/A'}</td>
+                                <td>${wine.year || 'N/A'}</td>
+                                <td>${wine.bottles || 0}</td>
+                            </tr>
+                        `;
+                    });
+                }
+
+                if (groupedWines['Red'].length > 0) {
+                    tableHTML += `
+                        <tr>
+                            <td colspan="4" class="wine-group-header">Red Wines</td>
+                        </tr>
+                    `;
+        
+                    groupedWines['Red'].forEach(wine => {
+                        tableHTML += `
+                            <tr>
+                                <td>${wine.name || 'Unknown'}</td>
+                                <td>${wine.varietal || 'N/A'}</td>
+                                <td>${wine.year || 'N/A'}</td>
+                                <td>${wine.bottles || 0}</td>
+                            </tr>
+                        `;
+                    });
+                }
+
+                if (groupedWines['Other'].length > 0) {
+                    tableHTML += `
+                        <tr>
+                            <td colspan="4" class="wine-group-header">Other Wines</td>
+                        </tr>
+                    `;
+        
+                    groupedWines['Other'].forEach(wine => {
+                        tableHTML += `
+                            <tr>
+                                <td>${wine.name || 'Unknown'}</td>
+                                <td>${wine.varietal || 'N/A'}</td>
+                                <td>${wine.year || 'N/A'}</td>
+                                <td>${wine.bottles || 0}</td>
+                            </tr>
+                        `;
+                    });
+                }
+
                 tableHTML += `
                             </tbody>
                         </table>

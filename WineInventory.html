@@ -281,9 +281,11 @@
             color: var(--primary-color);
             margin: 5px 0;
         }
-        
+        .wine-table-container,
         .inventory-table-container {
+            width: 100%
             overflow-x: auto;
+            border-style: border-box;
         }
         
         .inventory-table {
@@ -955,11 +957,13 @@
                 if (groupedWines['White'].length > 0) {
                     const whiteBottles = groupedWines['White'].reduce((sum, wine) => sum + wine.bottles, 0);
                     tableHTML += `
-                        <div class="wine-category-header">
-                            White Wines - <i>${whiteBottles} total</i>
+                        <div class="wine-table-container">
+                            <div class="wine-category-header">
+                                White Wines - <i>${whiteBottles} total</i>
+                            </div>
+                            <table class="wine-category-table">
+                                <tbody>
                         </div>
-                        <table class="wine-category-table">
-                            <tbody>
                     `;
     
                     groupedWines['White'].forEach(wine => {

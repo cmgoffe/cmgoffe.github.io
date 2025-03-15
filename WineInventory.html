@@ -957,7 +957,7 @@
                     const whiteBottles = groupedWines['White'].reduce((sum, wine) => sum + wine.bottles, 0);
                     tableHTML += `
                         <div class="wine-category-header">
-                            White Wines - ${whiteBottles} total
+                            White Wines - <i>${whiteBottles} total</i>
                         </div>
                         <table class="wine-category-table">
                             <tbody>
@@ -984,7 +984,7 @@
                     const redBottles = groupedWines['Red'].reduce((sum, wine) => sum + wine.bottles, 0);
                     tableHTML += `
                         <div class="wine-category-header">
-                            Red Wines - ${redBottles} total
+                            Red Wines - <i>${redBottles} total</i>
                         </div>
                         <table class="wine-category-table">
                             <tbody>
@@ -1009,7 +1009,7 @@
                     const otherBottles = groupedWines['Other'].reduce((sum, wine) => sum + wine.bottles, 0);
                     tableHTML += `
                         <div class="wine-category-header">
-                            Other Wines - ${otherBottles} total
+                            Other Wines - <i>${otherBottles} total</i>
                         </div>
                         <table class="wine-category-table">
                             <tbody>

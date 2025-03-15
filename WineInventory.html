@@ -335,9 +335,7 @@
             background-color: #f8f0f1;
             color: #722F37;
             padding: 6px 10px;
-            font-weight: bold;
-            display: flex;
-            justify-content: space-between;
+            display: block;
             border-bottom: 1px solid #ddd;
             margin-top: 3px;
             border-radius: 4px 4px 0 0;
@@ -959,8 +957,7 @@
                     const whiteBottles = groupedWines['White'].reduce((sum, wine) => sum + wine.bottles, 0);
                     tableHTML += `
                         <div class="wine-category-header">
-                            <span>White Wines</span>
-                            <span>(${whiteBottles} bottles)</span>
+                            White Wines - ${whiteBottles} total
                         </div>
                         <table class="wine-category-table">
                             <tbody>
@@ -987,8 +984,7 @@
                     const redBottles = groupedWines['Red'].reduce((sum, wine) => sum + wine.bottles, 0);
                     tableHTML += `
                         <div class="wine-category-header">
-                            <span>Red Wines</span>
-                            <span>(${redBottles} bottles)</span>
+                            Red Wines - ${redBottles} total
                         </div>
                         <table class="wine-category-table">
                             <tbody>
@@ -1013,8 +1009,7 @@
                     const otherBottles = groupedWines['Other'].reduce((sum, wine) => sum + wine.bottles, 0);
                     tableHTML += `
                         <div class="wine-category-header">
-                            <span>Other Wines</span>
-                            <span>(${otherBottles} bottles)</span>
+                            Other Wines - ${otherBottles} total
                         </div>
                         <table class="wine-category-table">
                             <tbody>

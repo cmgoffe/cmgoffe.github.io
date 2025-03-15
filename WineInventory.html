@@ -331,6 +331,16 @@
             padding: 30px;
             color: #666;
         }
+        .wine-category-header {
+            background-color: #f8f0f1;
+            color: #722F37;
+            padding: 10px 15px;
+            font-weight: bold;
+            display: flex;
+            justify-content: space-between;
+            border-bottom: 1px solid #ddd;
+            margin-top: 10px;
+        }
         .wine-group-header {
             background-color: #f0f0f0;
             padding: 10px 15px;
@@ -365,6 +375,24 @@
             .modal-content {
                 width: 95%;
             }
+        }
+        .inventory-table.main-headers-only {
+            margin-bottom: 15px;
+        }
+        
+        .wine-category-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+        
+        .wine-category-table td {
+            padding: 10px 15px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .wine-category-table tr:hover {
+            background-color: #f9f9f9;
         }
         
         /* Fallback message */
@@ -887,7 +915,7 @@
                 // Generate table of wines
                 let tableHTML = `
                     <div class="inventory-table-container">
-                        <table class="inventory-table">
+                        <table class="inventory-table main-headers-only">
                             <thead>
                                 <tr>
                                     <th>Wine</th>
@@ -896,18 +924,24 @@
                                     <th>Bottles</th>
                                 </tr>
                             </thead>
-                            <tbody>
+                        </table>
+
+                        <div id="wine-categories-container">
+                        
                 `;
                 
 
                 if (groupedWines['White'].length > 0) {
+                    const whiteBottles = groupedWines['White'].reduce((sum, wine) => sum + wine.bottles, 0);
                     tableHTML += `
-                        <tr class="category-row">
-                          <td colspan="4">
-                            <div class="wine-category-label">Red Wines</div>
-                          </td>
-                        </tr>
+                        <div class="wine-category-header">
+                            <span>White Wines</span>
+                            <span>(${whiteBottles} bottles)</span>
+                        </div>
+                        <table class="wine-category-table">
+                            <tbody>
                     `;
+    
                     groupedWines['White'].forEach(wine => {
                         tableHTML += `
                             <tr>
@@ -918,15 +952,23 @@
                             </tr>
                         `;
                     });
+
+                    tableHTML += `
+                            </tbody>
+                        </table>
+                    `;
                 }
 
                 if (groupedWines['Red'].length > 0) {
+                    const redBottles = groupedWines['Red'].reduce((sum, wine) => sum + wine.bottles, 0);
                     tableHTML += `
-                        <tr>
-                            <td colspan="4" class="wine-category-header">Red</td>
-                        </tr>
+                        <div class="wine-category-header">
+                            <span>Red Wines</span>
+                            <span>(${redBottles} bottles)</span>
+                        </div>
+                        <table class="wine-category-table">
+                            <tbody>
                     `;
-        
                     groupedWines['Red'].forEach(wine => {
                         tableHTML += `
                             <tr>
@@ -937,13 +979,22 @@
                             </tr>
                         `;
                     });
+                    tableHTML += `
+                            </tbody>
+                        </table>
+                    `;
+                }
                 }
 
                 if (groupedWines['Other'].length > 0) {
+                    const otherBottles = groupedWines['Other'].reduce((sum, wine) => sum + wine.bottles, 0);
                     tableHTML += `
-                        <tr>
-                            <td colspan="4" class="wine-category-header">Other</td>
-                        </tr>
+                        <div class="wine-category-header">
+                            <span>Other Wines</span>
+                            <span>(${otherBottles} bottles)</span>
+                        </div>
+                        <table class="wine-category-table">
+                            <tbody>
                     `;
         
                     groupedWines['Other'].forEach(wine => {
@@ -956,14 +1007,17 @@
                             </tr>
                         `;
                     });
-                }
-
-                tableHTML += `
+                
+                    tableHTML += `
                             </tbody>
                         </table>
+                    `;
+                }
+                tableHTML += `
+                        </div>
                     </div>
                 `;
-                
+
                 inventoryContent.innerHTML = tableHTML;
             }
             

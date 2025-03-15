@@ -984,7 +984,6 @@
                         </table>
                     `;
                 }
-                }
 
                 if (groupedWines['Other'].length > 0) {
                     const otherBottles = groupedWines['Other'].reduce((sum, wine) => sum + wine.bottles, 0);
@@ -1033,7 +1032,7 @@
                     closeDetailModal();
                 }
             });
-        );
+        });
     </script>
 </body>
 </html>

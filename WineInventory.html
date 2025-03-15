@@ -253,7 +253,7 @@
             padding: 20px;
         }
         
-        .inventory-stats {
+      /*  .inventory-stats {
             display: flex;
             flex-wrap: wrap;
             gap: 20px;
@@ -268,7 +268,7 @@
             padding: 15px;
             min-width: 120px;
             text-align: center;
-        }
+        }*/
         
         .stat-title {
             font-size: 0.9rem;
@@ -334,12 +334,13 @@
         .wine-category-header {
             background-color: #f8f0f1;
             color: #722F37;
-            padding: 10px 15px;
+            padding: 12px 15px;
             font-weight: bold;
             display: flex;
             justify-content: space-between;
             border-bottom: 1px solid #ddd;
-            margin-top: 10px;
+            margin-top: 15px;
+            border-radius: 4px 4px 0 0;
         }
         .wine-group-header {
             background-color: #f0f0f0;
@@ -352,6 +353,26 @@
         .category-row {
           padding: 5px 0;
           background-color: #f8f0f1; /* Light background */
+        }
+        /* Add fixed column widths to ensure alignment */
+        .inventory-table th:nth-child(1),
+        .wine-category-table td:nth-child(1) {
+            width: 35%;
+        }
+        
+        .inventory-table th:nth-child(2),
+        .wine-category-table td:nth-child(2) {
+            width: 30%;
+        }
+        
+        .inventory-table th:nth-child(3),
+        .wine-category-table td:nth-child(3) {
+            width: 15%;
+        }
+        
+        .inventory-table th:nth-child(4),
+        .wine-category-table td:nth-child(4) {
+            width: 20%;
         }
         
         .wine-category-label {
@@ -889,7 +910,7 @@
                 const stats = calculateInventoryStats(wines);
                 
                 // Display the stats
-                inventoryStats.innerHTML = `
+              /*  inventoryStats.innerHTML = `
                     <div class="inventory-stat">
                         <div class="stat-title">Total Bottles</div>
                         <div class="stat-number">${stats.totalBottles || 0}</div>
@@ -910,7 +931,7 @@
                         <div class="stat-title">Wines</div>
                         <div class="stat-number">${wines.length}</div>
                     </div>
-                `;
+                `; */
                 
                 // Generate table of wines
                 let tableHTML = `

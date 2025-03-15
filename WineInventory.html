@@ -986,11 +986,13 @@
                 if (groupedWines['Red'].length > 0) {
                     const redBottles = groupedWines['Red'].reduce((sum, wine) => sum + wine.bottles, 0);
                     tableHTML += `
-                        <div class="wine-category-header">
-                            Red Wines - <i>${redBottles} total</i>
+                        <div class="wine-table-container">
+                            <div class="wine-category-header">
+                                Red Wines - <i>${redBottles} total</i>
+                            </div>
+                            <table class="wine-category-table">
+                                <tbody>
                         </div>
-                        <table class="wine-category-table">
-                            <tbody>
                     `;
                     groupedWines['Red'].forEach(wine => {
                         tableHTML += `
@@ -1011,11 +1013,13 @@
                 if (groupedWines['Other'].length > 0) {
                     const otherBottles = groupedWines['Other'].reduce((sum, wine) => sum + wine.bottles, 0);
                     tableHTML += `
-                        <div class="wine-category-header">
-                            Other Wines - <i>${otherBottles} total</i>
+                        <div class="wine-table-container">
+                            <div class="wine-category-header">
+                                Other Wines - <i>${otherBottles} total</i>
+                            </div>
+                            <table class="wine-category-table">
+                                <tbody>
                         </div>
-                        <table class="wine-category-table">
-                            <tbody>
                     `;
         
                     groupedWines['Other'].forEach(wine => {

@@ -384,35 +384,33 @@
           line-height: 1.0;
           padding-left: 10px;
         }
-        
-        /* Responsive adjustments */
         @media (max-width: 768px) {
-            .wine-category-table, 
+            /*.wine-category-table, 
             .wine-category-table tbody, 
             .wine-category-table tr, 
             .wine-category-table td {
                 display: block;
                 width: 100%;
-            }
+            }*/
             
-            .wine-category-table tr {
+            /*.wine-category-table tr {
                 margin-bottom: 15px;
                 border-bottom: 2px solid #ddd;
                 padding-bottom: 10px;
             }
             
-            /* Hide the main header table on mobile */
+            Hide the main header table on mobile
             .inventory-table.main-headers-only {
                 display: none;
-            }
+            }*/
             
-            /* Add column headers as data labels */
+            /* Add column headers as data labels
             .wine-category-table td:nth-of-type(1):before { content: "Wine: "; font-weight: bold; }
             .wine-category-table td:nth-of-type(2):before { content: "Varietal: "; font-weight: bold; }
             .wine-category-table td:nth-of-type(3):before { content: "Year: "; font-weight: bold; }
             .wine-category-table td:nth-of-type(4):before { content: "Bottles: "; font-weight: bold; }
             
-            /* Adjust cell styling for vertical layout */
+            /* Adjust cell styling for vertical layout
             .wine-category-table td {
                 text-align: left;
                 padding: 8px 15px;
@@ -424,13 +422,12 @@
                 padding-left: 15px;
             }
             
-            /* Make category headers more prominent */
+            /* Make category headers more prominent
             .wine-category-header {
                 padding: 10px 15px;
                 font-size: 1.1em;
                 margin: 15px 0 10px 0;
             }
-        }
            /* .inventory-stats {
                 justify-content: center;
             }
@@ -444,8 +441,6 @@
             }
         }*/
 /* Mobile text wrapping fixes for wine inventory display */
-
-        @media (max-width: 768px) {
             /* Prevent labels from causing premature line breaks */
             .wine-category-table td:before {
                 display: inline-block;
@@ -487,6 +482,67 @@
             .wine-category-header {
                 white-space: normal;
                 line-height: 1.3;
+            }
+            /* Mobile-optimized card layout */
+            .modal-content {
+                width: 100%;
+                height: 100%;
+                max-height: none;
+                border-radius: 0;
+                margin: 0;
+            }
+            
+            /* Create a card-based layout for wines */
+            .wine-cards {
+                display: flex;
+                flex-direction: column;
+                gap: 10px;
+                padding: 10px 0;
+            }
+            
+            .wine-card {
+                background: white;
+                border-radius: 6px;
+                box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+                padding: 12px 15px;
+                border-left: 4px solid #722F37;
+            }
+            
+            /* Layout the stats in a grid */
+            .inventory-stats {
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(70px, 1fr));
+                gap: 8px;
+                margin: 0 0 15px 0;
+            }
+            
+            .inventory-stat {
+                background-color: #f9f9f9;
+                border-radius: 6px;
+                padding: 10px 5px;
+                text-align: center;
+                box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+            }
+            
+            /* Sticky headers for better navigation */
+            .modal-header {
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+            
+            .wine-category-header {
+                position: sticky;
+                top: 60px;
+                z-index: 90;
+                margin-top: 15px;
+                padding: 10px 15px;
+                border-radius: 4px;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                background-color: #f8f0f1;
+                box-shadow: 0 1px 3px rgba(0,0,0,0.1);
             }
         }
         .inventory-table.main-headers-only {
@@ -979,7 +1035,6 @@
                     const wineName = (item.Wine || '').trim();
                     const varietal = (item.Varietal || '').trim();
                     const type = getWineType(varietal);
-                    // Create a consistent format for display
                     return {
                         name: wineName,
                         varietal: varietal || 'N/A',
@@ -994,17 +1049,19 @@
                     'Red': wines.filter(wine => wine.type === 'Red'),
                     'Other': wines.filter(wine => wine.type === 'Other')
                 };  
-
-
-                groupedWines['Other'].sort((a,b) => a.name.localeCompare(b.name));
+            
+                // Sort wines alphabetically within each category
+                Object.keys(groupedWines).forEach(type => {
+                    groupedWines[type].sort((a,b) => a.name.localeCompare(b.name));
+                });
                 
                 // Calculate stats from the wines array
                 const stats = calculateInventoryStats(wines);
                 
                 // Display the stats
-              /*  inventoryStats.innerHTML = `
+                /*inventoryStats.innerHTML = `
                     <div class="inventory-stat">
-                        <div class="stat-title">Total Bottles</div>
+                        <div class="stat-title">Total</div>
                         <div class="stat-number">${stats.totalBottles || 0}</div>
                     </div>
                     <div class="inventory-stat">
@@ -1023,117 +1080,107 @@
                         <div class="stat-title">Wines</div>
                         <div class="stat-number">${wines.length}</div>
                     </div>
-                `; */
+                `;*/
                 
-                // Generate table of wines
-                let tableHTML = `
-                    <div class="inventory-table-container">
-                        <table class="inventory-table main-headers-only">
-                            <thead>
-                                <tr>
-                                    <th>Wine</th>
-                                    <th>Varietal</th>
-                                    <th>Year</th>
-                                    <th>Bottles</th>
-                                </tr>
-                            </thead>
-                        </table>
-
-                        <div id="wine-categories-container">
-                        
-                `;
+                // Use card layout for mobile, table for desktop
+                const isMobile = window.innerWidth <= 768;
                 
-
-                if (groupedWines['White'].length > 0) {
-                    const whiteBottles = groupedWines['White'].reduce((sum, wine) => sum + wine.bottles, 0);
-                    tableHTML += `
-                        <div class="wine-table-container">
-                            <div class="wine-category-header">
-                                White Wines - <i>${whiteBottles} total</i>
-                            </div>
-                            <table class="wine-category-table">
-                                <tbody>
-                        </div>
-                    `;
-    
-                    groupedWines['White'].forEach(wine => {
-                        tableHTML += `
-                            <tr>
-                                <td>${wine.name || 'Unknown'}</td>
-                                <td>${wine.varietal || 'N/A'}</td>
-                                <td>${wine.year || 'N/A'}</td>
-                                <td>${wine.bottles || 0}</td>
-                            </tr>
-                        `;
+                let contentHTML = '';
+                
+                if (isMobile) {
+                    // Card-based mobile layout
+                    contentHTML = `<div id="wine-categories-container">`;
+                    
+                    // Process each wine type
+                    ['White', 'Red', 'Other'].forEach(type => {
+                        if (groupedWines[type].length > 0) {
+                            const totalBottles = groupedWines[type].reduce((sum, wine) => sum + wine.bottles, 0);
+                            
+                            contentHTML += `
+                                <div class="wine-category-section">
+                                    <div class="wine-category-header">
+                                        ${type} Wines <span>(${totalBottles} bottles)</span>
+                                    </div>
+                                    <div class="wine-cards">
+                            `;
+                            
+                            groupedWines[type].forEach(wine => {
+                                contentHTML += `
+                                    <div class="wine-card">
+                                        <div class="wine-card-title">${wine.name || 'Unknown'}</div>
+                                        <div class="wine-card-details">
+                                            <span>${wine.varietal || 'N/A'} ${wine.year !== 'N/A' ? `· ${wine.year}` : ''}</span>
+                                            <span class="wine-card-count">${wine.bottles} bottle${wine.bottles !== 1 ? 's' : ''}</span>
+                                        </div>
+                                    </div>
+                                `;
+                            });
+                            
+                            contentHTML += `
+                                    </div>
+                                </div>
+                            `;
+                        }
                     });
-
-                    tableHTML += `
-                            </tbody>
-                        </table>
+                    
+                    contentHTML += `</div>`;
+                } else {
+                    // Standard table layout for desktop (your existing code)
+                    contentHTML = `
+                        <div class="inventory-table-container">
+                            <table class="inventory-table main-headers-only">
+                                <thead>
+                                    <tr>
+                                        <th>Wine</th>
+                                        <th>Varietal</th>
+                                        <th>Year</th>
+                                        <th>Bottles</th>
+                                    </tr>
+                                </thead>
+                            </table>
+                            <div id="wine-categories-container">
+                    `;
+                    
+                    // Your existing table layout code
+                    ['White', 'Red', 'Other'].forEach(type => {
+                        if (groupedWines[type].length > 0) {
+                            const totalBottles = groupedWines[type].reduce((sum, wine) => sum + wine.bottles, 0);
+                            
+                            contentHTML += `
+                                <div class="wine-table-container">
+                                    <div class="wine-category-header">
+                                        ${type} Wines - <i>${totalBottles} total</i>
+                                    </div>
+                                    <table class="wine-category-table">
+                                        <tbody>
+                            `;
+                            
+                            groupedWines[type].forEach(wine => {
+                                contentHTML += `
+                                    <tr>
+                                        <td>${wine.name || 'Unknown'}</td>
+                                        <td>${wine.varietal || 'N/A'}</td>
+                                        <td>${wine.year || 'N/A'}</td>
+                                        <td>${wine.bottles || 0}</td>
+                                    </tr>
+                                `;
+                            });
+                            
+                            contentHTML += `
+                                        </tbody>
+                                    </table>
+                                </div>
+                            `;
+                        }
+                    });
+                    
+                    contentHTML += `
+                            </div>
+                        </div>
                     `;
                 }
-
-                if (groupedWines['Red'].length > 0) {
-                    const redBottles = groupedWines['Red'].reduce((sum, wine) => sum + wine.bottles, 0);
-                    tableHTML += `
-                        <div class="wine-table-container">
-                            <div class="wine-category-header">
-                                Red Wines - <i>${redBottles} total</i>
-                            </div>
-                            <table class="wine-category-table">
-                                <tbody>
-                        </div>
-                    `;
-                    groupedWines['Red'].forEach(wine => {
-                        tableHTML += `
-                            <tr>
-                                <td>${wine.name || 'Unknown'}</td>
-                                <td>${wine.varietal || 'N/A'}</td>
-                                <td>${wine.year || 'N/A'}</td>
-                                <td>${wine.bottles || 0}</td>
-                            </tr>
-                        `;
-                    });
-                    tableHTML += `
-                            </tbody>
-                        </table>
-                    `;
-                }
-
-                if (groupedWines['Other'].length > 0) {
-                    const otherBottles = groupedWines['Other'].reduce((sum, wine) => sum + wine.bottles, 0);
-                    tableHTML += `
-                        <div class="wine-table-container">
-                            <div class="wine-category-header">
-                                Other Wines - <i>${otherBottles} total</i>
-                            </div>
-                            <table class="wine-category-table">
-                                <tbody>
-                        </div>
-                    `;
-        
-                    groupedWines['Other'].forEach(wine => {
-                        tableHTML += `
-                            <tr>
-                                <td>${wine.name || 'Unknown'}</td>
-                                <td>${wine.varietal || 'N/A'}</td>
-                                <td>${wine.year || 'N/A'}</td>
-                                <td>${wine.bottles || 0}</td>
-                            </tr>
-                        `;
-                    });
                 
-                    tableHTML += `
-                            </tbody>
-                        </table>
-                    `;
-                }
-                tableHTML += `
-                        </div>
-                    </div>
-                `;
-
-                inventoryContent.innerHTML = tableHTML;
+                inventoryContent.innerHTML = contentHTML;
             }
             
             // Close the detail modal

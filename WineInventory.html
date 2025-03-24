@@ -1028,31 +1028,6 @@
                 
                 // Calculate stats from the wines array
                 const stats = calculateInventoryStats(wines);
-                
-                // Display the stats with improved layout
-                inventoryStats.innerHTML = `
-                    <div class="inventory-stat">
-                        <div class="stat-title">Total</div>
-                        <div class="stat-number">${stats.totalBottles || 0}</div>
-                    </div>
-                    <div class="inventory-stat">
-                        <div class="stat-title">White</div>
-                        <div class="stat-number">${stats.whiteWines || 0}</div>
-                    </div>
-                    <div class="inventory-stat">
-                        <div class="stat-title">Red</div>
-                        <div class="stat-number">${stats.redWines || 0}</div>
-                    </div>
-                    <div class="inventory-stat">
-                        <div class="stat-title">Other</div>
-                        <div class="stat-number">${stats.otherWines || 0}</div>
-                    </div>
-                    <div class="inventory-stat">
-                        <div class="stat-title">Wines</div>
-                        <div class="stat-number">${wines.length}</div>
-                    </div>
-                `;
-                
                 // Use card layout for mobile, table for desktop
                 const isMobile = window.innerWidth <= 768;
                 

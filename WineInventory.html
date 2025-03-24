@@ -384,165 +384,135 @@
           line-height: 1.0;
           padding-left: 10px;
         }
+/* Enhanced typography and visual hierarchy for wine cards */
         @media (max-width: 768px) {
-            /*.wine-category-table, 
-            .wine-category-table tbody, 
-            .wine-category-table tr, 
-            .wine-category-table td {
-                display: block;
-                width: 100%;
-            }*/
-            
-            /*.wine-category-table tr {
-                margin-bottom: 15px;
-                border-bottom: 2px solid #ddd;
-                padding-bottom: 10px;
-            }
-            
-            Hide the main header table on mobile
-            .inventory-table.main-headers-only {
-                display: none;
-            }*/
-            
-            /* Add column headers as data labels
-            .wine-category-table td:nth-of-type(1):before { content: "Wine: "; font-weight: bold; }
-            .wine-category-table td:nth-of-type(2):before { content: "Varietal: "; font-weight: bold; }
-            .wine-category-table td:nth-of-type(3):before { content: "Year: "; font-weight: bold; }
-            .wine-category-table td:nth-of-type(4):before { content: "Bottles: "; font-weight: bold; }
-            
-            /* Adjust cell styling for vertical layout
-            .wine-category-table td {
-                text-align: left;
-                padding: 8px 15px;
-                border: none;
-            }
-            
-            .wine-category-table td:nth-child(4) {
-                text-align: left;
-                padding-left: 15px;
-            }
-            
-            /* Make category headers more prominent
-            .wine-category-header {
-                padding: 10px 15px;
-                font-size: 1.1em;
-                margin: 15px 0 10px 0;
-            }
-           /* .inventory-stats {
-                justify-content: center;
-            }
-            
-            .inventory-stat {
-                min-width: 100px;
-            }
-            
-            .modal-content {
-                width: 98%;
-            }
-        }*/
-/* Mobile text wrapping fixes for wine inventory display */
-            /* Prevent labels from causing premature line breaks */
-            .wine-category-table td:before {
-                display: inline-block;
-                width: auto;
-                min-width: 70px;
-                margin-right: 5px;
-                white-space: nowrap;
-            }
-            
-            /* Allow wine names to use available space more efficiently */
-            .wine-category-table td:nth-of-type(1) {
-                white-space: normal;
-                word-break: normal;
-                overflow-wrap: break-word;
-                hyphens: manual;
-            }
-            
-            /* Fix vertical spacing between lines */
-            .wine-category-table td {
-                padding: 6px 15px;
-                line-height: 1.4;
-            }
-            
-            /* Ensure data values don't wrap unnecessarily */
-            .wine-category-table td:after {
-                white-space: normal;
-                display: inline;
-            }
-            
-            /* Make better use of horizontal space */
-            .wine-table-container,
-            .inventory-table-container {
-                width: 100%;
-                max-width: 100%;
-                box-sizing: border-box;
-            }
-            
-            /* Prevent category headers from breaking strangely */
-            .wine-category-header {
-                white-space: normal;
-                line-height: 1.3;
-            }
-            /* Mobile-optimized card layout */
-            .modal-content {
-                width: 100%;
-                height: 100%;
-                max-height: none;
-                border-radius: 0;
-                margin: 0;
-            }
-            
-            /* Create a card-based layout for wines */
-            .wine-cards {
-                display: flex;
-                flex-direction: column;
-                gap: 10px;
-                padding: 10px 0;
-            }
-            
+            /* Wine card container */
             .wine-card {
                 background: white;
                 border-radius: 6px;
-                box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-                padding: 12px 15px;
+                box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+                padding: 14px 16px;
                 border-left: 4px solid #722F37;
+                margin-bottom: 12px;
+                position: relative;
+                transition: transform 0.2s ease;
             }
             
-            /* Layout the stats in a grid */
-            .inventory-stats {
-                display: grid;
-                grid-template-columns: repeat(auto-fit, minmax(70px, 1fr));
-                gap: 8px;
-                margin: 0 0 15px 0;
+            .wine-card:active {
+                transform: scale(0.98);
             }
             
-            .inventory-stat {
-                background-color: #f9f9f9;
-                border-radius: 6px;
-                padding: 10px 5px;
-                text-align: center;
-                box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+            /* Wine name - most important information */
+            .wine-card-title {
+                font-size: 16px;
+                font-weight: 600;
+                color: #333333;
+                margin-bottom: 8px;
+                line-height: 1.3;
+                letter-spacing: 0.01em;
             }
             
-            /* Sticky headers for better navigation */
-            .modal-header {
-                position: sticky;
-                top: 0;
-                z-index: 100;
-            }
-            
-            .wine-category-header {
-                position: sticky;
-                top: 60px;
-                z-index: 90;
-                margin-top: 15px;
-                padding: 10px 15px;
-                border-radius: 4px;
+            /* Container for varietal, year and bottle count */
+            .wine-card-details {
                 display: flex;
                 justify-content: space-between;
                 align-items: center;
+            }
+            
+            /* Varietal and year - secondary information */
+            .wine-card-info {
+                font-size: 14px;
+                color: #666666;
+                /* Allow long text to break naturally */
+                word-break: break-word;
+                flex: 1;
+            }
+            
+            /* Highlight the vintage year */
+            .wine-year {
+                font-weight: 500;
+                color: #8B3A44;
+            }
+            
+            /* Varietal type */
+            .wine-varietal {
+                font-style: italic;
+            }
+            
+            /* Bottle count - important metric */
+            .wine-card-count {
+                font-weight: 600;
+                font-size: 15px;
+                color: #722F37;
                 background-color: #f8f0f1;
-                box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+                padding: 4px 10px;
+                border-radius: 12px;
+                margin-left: 10px;
+                white-space: nowrap;
+            }
+            
+            /* Category headers */
+            .wine-category-header {
+                background: linear-gradient(to right, #722F37, #8B3A44);
+                color: white;
+                padding: 12px 16px;
+                font-size: 17px;
+                font-weight: 600;
+                border-radius: 6px 6px 0 0;
+                margin-top: 20px;
+                margin-bottom: 12px;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                position: sticky;
+                top: 60px;
+                z-index: 10;
+                box-shadow: 0 2px 4px rgba(0,0,0,0.15);
+            }
+            
+            .wine-category-count {
+                font-size: 14px;
+                font-weight: normal;
+                opacity: 0.9;
+            }
+            
+            /* Improve the stats area */
+            .inventory-stats {
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(65px, 1fr));
+                gap: 8px;
+                margin: 0 0 20px 0;
+                background-color: #f9f9f9;
+                border-radius: 8px;
+                padding: 12px;
+            }
+            
+            .inventory-stat {
+                text-align: center;
+                background-color: white;
+                border-radius: 6px;
+                padding: 10px 6px;
+                box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+            }
+            
+            .stat-title {
+                font-size: 12px;
+                color: #666666;
+                margin-bottom: 4px;
+            }
+            
+            .stat-number {
+                font-size: 18px;
+                font-weight: 600;
+                color: #722F37;
+            }
+            
+            /* Empty category message */
+            .empty-category {
+                text-align: center;
+                padding: 20px;
+                color: #666;
+                font-style: italic;
             }
         }
         .inventory-table.main-headers-only {
@@ -1020,6 +990,7 @@
             }
             
             // Render the detailed inventory
+            // Updated renderLockerDetails function with improved typography
             function renderLockerDetails(data, lockerName) {
                 if (!data || !Array.isArray(data) || data.length === 0) {
                     inventoryContent.innerHTML = `
@@ -1058,8 +1029,8 @@
                 // Calculate stats from the wines array
                 const stats = calculateInventoryStats(wines);
                 
-                // Display the stats
-                /*inventoryStats.innerHTML = `
+                // Display the stats with improved layout
+                inventoryStats.innerHTML = `
                     <div class="inventory-stat">
                         <div class="stat-title">Total</div>
                         <div class="stat-number">${stats.totalBottles || 0}</div>
@@ -1080,7 +1051,7 @@
                         <div class="stat-title">Wines</div>
                         <div class="stat-number">${wines.length}</div>
                     </div>
-                `;*/
+                `;
                 
                 // Use card layout for mobile, table for desktop
                 const isMobile = window.innerWidth <= 768;
@@ -1088,29 +1059,39 @@
                 let contentHTML = '';
                 
                 if (isMobile) {
-                    // Card-based mobile layout
+                    // Enhanced card-based mobile layout with better typography
                     contentHTML = `<div id="wine-categories-container">`;
                     
                     // Process each wine type
-                    ['White', 'Red', 'Other'].forEach(type => {
+                    ['Red', 'White', 'Other'].forEach(type => {
                         if (groupedWines[type].length > 0) {
                             const totalBottles = groupedWines[type].reduce((sum, wine) => sum + wine.bottles, 0);
                             
                             contentHTML += `
                                 <div class="wine-category-section">
                                     <div class="wine-category-header">
-                                        ${type} Wines <span>(${totalBottles} bottles)</span>
+                                        ${type} Wines <span class="wine-category-count">(${totalBottles} bottles)</span>
                                     </div>
                                     <div class="wine-cards">
                             `;
                             
                             groupedWines[type].forEach(wine => {
+                                // Format the year for display
+                                const yearDisplay = wine.year !== 'N/A' ? 
+                                    `<span class="wine-year">${wine.year}</span>` : '';
+                                
+                                // Format bottles text
+                                const bottleText = wine.bottles === 1 ? 'bottle' : 'bottles';
+                                
                                 contentHTML += `
                                     <div class="wine-card">
                                         <div class="wine-card-title">${wine.name || 'Unknown'}</div>
                                         <div class="wine-card-details">
-                                            <span>${wine.varietal || 'N/A'} ${wine.year !== 'N/A' ? `· ${wine.year}` : ''}</span>
-                                            <span class="wine-card-count">${wine.bottles} bottle${wine.bottles !== 1 ? 's' : ''}</span>
+                                            <div class="wine-card-info">
+                                                <span class="wine-varietal">${wine.varietal || 'N/A'}</span>
+                                                ${wine.year !== 'N/A' ? ` · ${yearDisplay}` : ''}
+                                            </div>
+                                            <div class="wine-card-count">${wine.bottles} ${bottleText}</div>
                                         </div>
                                     </div>
                                 `;
@@ -1120,12 +1101,22 @@
                                     </div>
                                 </div>
                             `;
+                        } else if (type === 'Red' || type === 'White') {
+                            // Show empty message only for main categories
+                            contentHTML += `
+                                <div class="wine-category-section">
+                                    <div class="wine-category-header">
+                                        ${type} Wines <span class="wine-category-count">(0 bottles)</span>
+                                    </div>
+                                    <div class="empty-category">No ${type.toLowerCase()} wines in inventory</div>
+                                </div>
+                            `;
                         }
                     });
                     
                     contentHTML += `</div>`;
                 } else {
-                    // Standard table layout for desktop (your existing code)
+                    // Standard table layout for desktop (keep your existing code)
                     contentHTML = `
                         <div class="inventory-table-container">
                             <table class="inventory-table main-headers-only">
@@ -1182,7 +1173,7 @@
                 
                 inventoryContent.innerHTML = contentHTML;
             }
-            
+                        
             // Close the detail modal
             function closeDetailModal() {
                 detailModal.style.display = 'none';

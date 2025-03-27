@@ -1003,10 +1003,10 @@
                             
                             contentHTML += `
                                 <div class="wine-category-section">
-                                    <div class="wine-category-header">
+                                    <div class="wine-category-header" data-category="${type}">
                                         ${type} Wines <span class="wine-category-count">(${totalBottles} bottles)</span>
                                     </div>
-                                    <div class="wine-cards">
+                                    <div class="wine-cards" data-category="${type}">
                             `;
                             
                             groupedWines[type].forEach(wine => {
@@ -1055,8 +1055,7 @@
                             </table>
                             <div id="wine-categories-container">
                     `;
-                    
-                    // Your existing table layout code
+
                     ['White', 'Red', 'Other'].forEach(type => {
                         if (groupedWines[type].length > 0) {
                             const totalBottles = groupedWines[type].reduce((sum, wine) => sum + wine.bottles, 0);
@@ -1096,6 +1095,69 @@
                 }
                 
                 inventoryContent.innerHTML = contentHTML;
+                // Add the collapsible functionality, but only for mobile
+                if (isMobile) {
+                    // Add styles for the toggle icons
+                    const collapsibleStyles = document.createElement('style');
+                    collapsibleStyles.textContent = `
+                        @media (max-width: 768px) {
+                            .wine-category-header {
+                                cursor: pointer;
+                                position: relative;
+                                padding-right: 40px;
+                            }
+                            
+                            .category-toggle {
+                                position: absolute;
+                                right: 16px;
+                                top: 50%;
+                                transform: translateY(-50%);
+                                color: rgba(255,255,255,0.9);
+                                font-size: 16px;
+                            }
+                            
+                            .category-toggle i {
+                                transition: transform 0.3s ease;
+                            }
+                            
+                            .wine-cards {
+                                transition: max-height 0.3s ease;
+                            }
+                        }
+                    `;
+                    document.head.appendChild(collapsibleStyles);
+                    
+                    // Wait a moment for the DOM to update
+                    setTimeout(() => {
+                        // Get all category headers
+                        const categoryHeaders = document.querySelectorAll('.wine-category-header');
+                        
+                        categoryHeaders.forEach(header => {
+                            // Add toggle icon
+                            const toggleIcon = document.createElement('span');
+                            toggleIcon.className = 'category-toggle';
+                            toggleIcon.innerHTML = '<i class="fas fa-chevron-up"></i>';
+                            header.appendChild(toggleIcon);
+                            
+                            // Get the next element (the wine cards container)
+                            const cardsContainer = header.nextElementSibling;
+                            
+                            // Add click event
+                            header.addEventListener('click', function() {
+                                // Toggle visibility
+                                const icon = this.querySelector('.category-toggle i');
+                                
+                                if (cardsContainer.style.display === 'none') {
+                                    cardsContainer.style.display = 'block';
+                                    icon.className = 'fas fa-chevron-up';
+                                } else {
+                                    cardsContainer.style.display = 'none';
+                                    icon.className = 'fas fa-chevron-down';
+                                }
+                            });
+                        });
+                    }, 100);
+                }
             }
                         
             // Close the detail modal

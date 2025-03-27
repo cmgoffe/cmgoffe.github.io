@@ -1002,18 +1002,20 @@
                 }
                 
                 // Process the wines data from the Table JSON format
-                const wines = data.map(item => {
-                    const wineName = (item.Wine || '').trim();
-                    const varietal = (item.Varietal || '').trim();
-                    const type = getWineType(varietal);
-                    return {
-                        name: wineName,
-                        varietal: varietal || 'N/A',
-                        year: item.Year || 'N/A',
-                        bottles: Number(item.Bottles) || 0,
-                        type: type
-                    };
-                });
+                const wines = data
+                    .map(item => {
+                        const wineName = (item.Wine || '').trim();
+                        const varietal = (item.Varietal || '').trim();
+                        const type = getWineType(varietal);
+                        return {
+                            name: wineName,
+                            varietal: varietal || 'N/A',
+                            year: item.Year || 'N/A',
+                            bottles: Number(item.Bottles) || 0,
+                            type: type
+                        };
+                    })
+                    .filter(wine => wine.bottles > 0);
                 
                 const groupedWines = {
                     'White': wines.filter(wine => wine.type === 'White'),

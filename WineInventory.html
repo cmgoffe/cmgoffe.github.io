@@ -1078,19 +1078,9 @@
                                     </div>
                                 </div>
                             `;
-                        } else if (type === 'Red' || type === 'White') {
-                            // Show empty message only for main categories
-                            contentHTML += `
-                                <div class="wine-category-section">
-                                    <div class="wine-category-header">
-                                        ${type} Wines <span class="wine-category-count">(0 bottles)</span>
-                                    </div>
-                                    <div class="empty-category">No ${type.toLowerCase()} wines in inventory</div>
-                                </div>
-                            `;
                         }
                     });
-                    
+    
                     contentHTML += `</div>`;
                 } else {
                     // Standard table layout for desktop (keep your existing code)

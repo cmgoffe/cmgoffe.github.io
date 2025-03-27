@@ -252,24 +252,6 @@
         .modal-body {
             padding: 20px;
         }
-        
-      /*  .inventory-stats {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 20px;
-            margin-bottom: 20px;
-            padding-bottom: 20px;
-            border-bottom: 1px solid #eee;
-        }
-        
-        .inventory-stat {
-            background-color: #f9f9f9;
-            border-radius: 8px;
-            padding: 15px;
-            min-width: 120px;
-            text-align: center;
-        }*/
-        
         .stat-title {
             font-size: 0.9rem;
             color: #666;
@@ -386,7 +368,6 @@
         }
 /* Enhanced typography and visual hierarchy for wine cards */
         @media (max-width: 768px) {
-            /* Wine card container */
             .wine-card {
                 background: white;
                 border-radius: 6px;
@@ -401,8 +382,6 @@
             .wine-card:active {
                 transform: scale(0.98);
             }
-            
-            /* Wine name - most important information */
             .wine-card-title {
                 font-size: 16px;
                 font-weight: 600;
@@ -411,35 +390,24 @@
                 line-height: 1.3;
                 letter-spacing: 0.01em;
             }
-            
-            /* Container for varietal, year and bottle count */
             .wine-card-details {
                 display: flex;
                 justify-content: space-between;
                 align-items: center;
             }
-            
-            /* Varietal and year - secondary information */
             .wine-card-info {
                 font-size: 14px;
                 color: #666666;
-                /* Allow long text to break naturally */
                 word-break: break-word;
                 flex: 1;
             }
-            
-            /* Highlight the vintage year */
             .wine-year {
                 font-weight: 500;
                 color: #8B3A44;
             }
-            
-            /* Varietal type */
             .wine-varietal {
                 font-style: italic;
             }
-            
-            /* Bottle count - important metric */
             .wine-card-count {
                 font-weight: 600;
                 font-size: 15px;
@@ -450,8 +418,6 @@
                 margin-left: 10px;
                 white-space: nowrap;
             }
-            
-            /* Category headers */
             .wine-category-header {
                 background: linear-gradient(to right, #722F37, #8B3A44);
                 color: white;
@@ -583,11 +549,9 @@
             </div>
             <div class="modal-body">
                 <div class="inventory-stats" id="inventory-stats">
-                    <!-- Stats will be populated dynamically -->
                 </div>
                 
                 <div id="inventory-content">
-                    <!-- Content will be populated dynamically -->
                 </div>
             </div>
         </div>
@@ -614,7 +578,7 @@
             let wineData = [];
             let totalBottlesCount = 0;
             let jsonFilesBottleCount = {}; // Store bottle counts from individual JSON files
-            let varietalTypeMap = {}; // Global variable to store the varietal mapping
+            let varietalTypeMap = {};
 
 
             function loadVarietalMapping() {
@@ -631,10 +595,8 @@
 
                         const varietalsList = data.value || data;
                 
-                // Create a mapping from varietal name to type
                         varietalsList.forEach(item => {
                             if (item.Varietal) {
-                        // Store in lowercase for case-insensitive matching
                                 varietalTypeMap[item.Varietal.toLowerCase()] = item.Type || 'Other';
                             }
                         });
@@ -646,7 +608,6 @@
                     });
             }
     
-    // ADD THIS PART - Add function to get wine type from varietal
             function getWineType(varietal) {
         // If we have a varietal, try to look it up in our mapping
                 if (varietal && varietal.trim() !== '' && varietal !== 'N/A') {
@@ -690,8 +651,6 @@
                     otherWines
                 };
             }
-            
-            // Fetch the wine inventory directory data
 // First load the varietal mapping, then proceed with the rest
             loadVarietalMapping()
                 .then(() => {
@@ -988,8 +947,6 @@
                         `;
                     });
             }
-            
-            // Render the detailed inventory
             // Updated renderLockerDetails function with improved typography
             function renderLockerDetails(data, lockerName) {
                 if (!data || !Array.isArray(data) || data.length === 0) {

@@ -10,7 +10,7 @@
             --primary-color: #722F37;
             --secondary-color: #ffffff;
             --text-color: #333;
-            --card-bg: #FFF8E7;
+            --card-bg: #f9f5ed;
             --hover-color: #8B3A44;
             --accent-color: #D4AF37; /* Gold accent */
         }
@@ -64,7 +64,7 @@
             width: 100%;
             padding: 12px 20px;
             font-size: 16px;
-            border: 1px solid #ddd;
+            border: 1px solid var(--card-border);
             border-radius: 30px;
             background-color: var(--card-bg);
             box-shadow: 0 2px 5px rgba(0,0,0,0.1);
@@ -87,6 +87,7 @@
             background: var(--card-bg);
             border-radius: 8px;
             overflow: hidden;
+            border: 1px solid var(--card-border);
             box-shadow: 0 3px 10px rgba(0,0,0,0.1);
             transition: transform 0.3s ease, box-shadow 0.3s ease;
             cursor: pointer;

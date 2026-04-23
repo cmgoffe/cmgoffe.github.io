@@ -5,1178 +5,1029 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Wine Society Lockers</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --primary-color: #722F37;
-            --secondary-color: #ffffff;
-            --text-color: #333;
-            --card-bg: #f8f8f8;
-            --hover-color: #8B3A44;
-            --accent-color: #D4AF37;
-            --card-border: #eeeeee;
+            --green:      #0A6B3A;
+            --green-dk:   #06522C;
+            --green-soft: #E7F0EA;
+            --green-band: #F2F7F3;
+
+            --cherry:    #C4213B;
+            --cherry-dk: #8B1828;
+
+            --ink:      #222;
+            --ink-soft: #6B6B6B;
+            --paper:    #FFFFFF;
+            --bg:       #FAFAFA;
+            --line:     #E4E4E4;
+            --line-soft:#EFEFEF;
         }
-        
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
-        
+
+        * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+        html, body { background: var(--bg); }
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: var(--secondary-color);
-            color: var(--text-color);
-            line-height: 1.6;
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            color: var(--ink);
+            line-height: 1.5;
+            -webkit-font-smoothing: antialiased;
+            font-size: 15px;
         }
-        
-        .container {
-            max-width: 1200px;
+
+        .wrap {
+            max-width: 880px;
             margin: 0 auto;
-            padding: 20px;
+            padding: 18px 18px 48px;
         }
-        
-        header {
-            text-align: center;
-            margin-bottom: 30px;
-            padding: 20px 0;
-            border-bottom: 2px solid var(--primary-color);
-        }
-        
-        h1 {
-            color: var(--primary-color);
-            font-size: 2.5rem;
-            margin-bottom: 10px;
-        }
-        
-        .subtitle {
-            font-size: 1.2rem;
-            color: #666;
-        }
-        
-        .search-container {
-            margin-bottom: 30px;
-            position: relative;
-            max-width: 600px;
-            margin-left: auto;
-            margin-right: auto;
-        }
-        
-        #search {
-            width: 100%;
-            padding: 12px 20px;
-            font-size: 16px;
-            border: 1px solid var(--card-border);
-            border-radius: 30px;
-            background-color: var(--card-bg);
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-        }
-        
-        .search-icon {
-            position: absolute;
-            right: 15px;
-            top: 12px;
-            color: #888;
-        }
-        
-        .directory {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 25px;
-        }
-        
-        .collector-card {
-            background: var(--card-bg);
-            border-radius: 8px;
-            overflow: hidden;
-            border: 1px solid var(--card-border);
-            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-            cursor: pointer;
-        }
-        
-        .collector-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 20px rgba(0,0,0,0.15);
-        }
-        
-        .card-header {
-            background: linear-gradient(135deg, var(--primary-color) 0%, var(--hover-color) 100%);
-            color: white;
-            padding: 15px 20px;
-        }
-        
-        .sheet-name {
-            font-size: 1.3rem;
-            font-weight: bold;
-        }
-        
-        .card-body {
-            padding: 20px;
-            text-align: center;
-        }
-        
-        .bottle-count {
-            font-size: 2rem;
-            font-weight: bold;
-            color: var(--primary-color);
-            margin: 10px 0;
-        }
-        
-        .bottle-label {
-            font-size: 1rem;
-            color: #666;
-        }
-        
-        .wine-icon {
-            font-size: 1.5rem;
-            margin-right: 10px;
-            color: var(--primary-color);
-        }
-        
-        .card-footer {
-            padding: 15px;
-            text-align: center;
-            background-color: #f9f9f9;
-            border-top: 1px solid #eee;
-        }
-        
-        .view-link {
-            color: var(--primary-color);
-            text-decoration: none;
-            font-weight: bold;
-            transition: color 0.3s ease;
-            cursor: pointer;
-            margin: 0 8px;
-        }
-        
-        .view-link:hover {
-            color: var(--hover-color);
-        }
-        
-        .loading {
-            text-align: center;
-            padding: 40px;
-            font-size: 18px;
-            color: #666;
-        }
-        
-        .loader {
-            border: 5px solid #f3f3f3;
-            border-top: 5px solid var(--primary-color);
-            border-radius: 50%;
-            width: 50px;
-            height: 50px;
-            animation: spin 1s linear infinite;
-            margin: 20px auto;
-        }
-        
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-        
-        .error {
-            text-align: center;
-            padding: 20px;
-            color: #d32f2f;
-            background-color: #ffebee;
-            border-radius: 8px;
-            margin: 20px 0;
-        }
-        
-        .no-results {
-            text-align: center;
-            padding: 30px;
-            grid-column: 1 / -1;
-            color: #666;
-        }
-        
-        .updated-time {
-            text-align: center;
-            margin-top: 40px;
-            color: #666;
-            font-size: 0.9rem;
-        }
-        
-        /* Detail view modal styles */
-        #detail-modal {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background-color: rgba(0,0,0,0.8);
-            z-index: 1000;
-            display: none;
-            justify-content: center;
+
+        /* ── Landing ───────────────────────────────── */
+        #landing {
+            min-height: 80vh;
+            display: flex;
             align-items: center;
-            padding: 20px;
+            justify-content: center;
+            padding: 40px 16px;
         }
-        
-        .modal-content {
-            background-color: white;
-            border-radius: 8px;
-            width: 90%;
-            max-width: 1000px;
-            max-height: 90vh;
-            overflow-y: auto;
+        .landing-card {
+            background: var(--paper);
+            border: 1px solid var(--line);
+            border-top: 4px solid var(--green);
+            border-radius: 6px;
+            padding: 40px 32px 32px;
+            max-width: 420px;
+            width: 100%;
+            text-align: center;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+            animation: fadeUp 0.4s ease both;
+        }
+        .landing-icon {
+            width: 56px; height: 56px; margin: 0 auto 14px;
+            border-radius: 50%; background: var(--green-soft);
+            display: flex; align-items: center; justify-content: center;
+            color: var(--green); font-size: 24px;
+        }
+        .landing-card h1 {
+            font-family: 'Cormorant Garamond', serif;
+            font-weight: 600;
+            font-size: 28px;
+            color: var(--green-dk);
+            letter-spacing: 0.01em;
+        }
+        .landing-card .sub {
+            font-size: 13px;
+            color: var(--ink-soft);
+            margin: 6px 0 24px;
+            letter-spacing: 0.02em;
+        }
+        #mform { display: flex; flex-direction: column; gap: 10px; }
+        #minput {
+            width: 100%;
+            padding: 12px 16px;
+            text-align: center;
+            font: 400 15px 'Inter', sans-serif;
+            border: 1px solid var(--line);
+            border-radius: 6px;
+            background: #fff;
+            transition: border-color 0.15s, box-shadow 0.15s;
+        }
+        #minput:focus {
+            outline: none;
+            border-color: var(--green);
+            box-shadow: 0 0 0 3px rgba(10,107,58,0.15);
+        }
+        #mbtn {
+            width: 100%;
+            padding: 12px;
+            border: none;
+            border-radius: 6px;
+            background: var(--green);
+            color: #fff;
+            font: 600 14px 'Inter', sans-serif;
+            letter-spacing: 0.03em;
+            cursor: pointer;
+            transition: background 0.15s;
+            display: flex; align-items: center; justify-content: center; gap: 8px;
+        }
+        #mbtn:hover { background: var(--green-dk); }
+        #mbtn:active { transform: scale(0.99); }
+        #mbtn:disabled { background: #aaa; cursor: not-allowed; }
+        #merror {
+            background: #FDECEE;
+            color: var(--cherry-dk);
+            border-radius: 4px;
+            padding: 8px 12px;
+            font-size: 13px;
+            display: none;
+            animation: shake 0.4s;
+        }
+        .hint {
+            font-size: 12px;
+            color: var(--ink-soft);
+            margin-top: 6px;
+        }
+
+        /* Matches list */
+        #matches-list {
+            display: none;
+            text-align: left;
+            margin-top: 4px;
+            border: 1px solid var(--line);
+            border-radius: 6px;
+            overflow: hidden;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.06);
+        }
+        .match-item {
+            padding: 11px 16px;
+            cursor: pointer;
+            border-bottom: 1px solid var(--line-soft);
+            display: flex; align-items: center; justify-content: space-between;
+            gap: 8px;
+            transition: background 0.1s;
+            font-size: 14px;
+        }
+        .match-item:last-child { border-bottom: none; }
+        .match-item:hover { background: var(--green-soft); }
+        .match-item .match-name { font-weight: 600; color: var(--ink); }
+        .match-item .match-bottles { font-size: 12px; color: var(--ink-soft); }
+
+        @keyframes fadeUp { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+        @keyframes shake {
+            0%,100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            75% { transform: translateX(5px); }
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        /* ── Locker view ───────────────────────────── */
+        #locker { display: none; animation: fadeUp 0.35s ease both; }
+
+        .hdr {
+            background: linear-gradient(135deg, var(--green) 0%, var(--green-dk) 100%);
+            color: #fff;
+            padding: 18px 22px;
+            border-radius: 6px;
             position: relative;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+            margin-bottom: 14px;
         }
-        
-        .modal-header {
-            background: linear-gradient(135deg, var(--primary-color) 0%, var(--hover-color) 100%);
-            color: white;
-            padding: 15px 20px;
+        .hdr::after {
+            content: '';
+            position: absolute; left: 0; right: 0; bottom: 0;
+            height: 3px;
+            background: var(--cherry);
+            border-radius: 0 0 6px 6px;
+        }
+        .hdr-top {
+            display: flex; justify-content: space-between; align-items: flex-start;
+            gap: 12px; margin-bottom: 10px;
+        }
+        .hdr-title h2 {
+            font-family: 'Cormorant Garamond', serif;
+            font-weight: 600;
+            font-size: 26px;
+            line-height: 1.1;
+            letter-spacing: 0.01em;
+        }
+        .hdr-title .mem {
+            margin-top: 4px;
+            font-size: 11px;
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+            color: rgba(255,255,255,0.8);
+            font-weight: 500;
+        }
+        .back {
+            background: rgba(255,255,255,0.15);
+            border: 1px solid rgba(255,255,255,0.35);
+            color: #fff;
+            padding: 7px 13px;
+            border-radius: 4px;
+            font: 500 12px 'Inter', sans-serif;
+            cursor: pointer;
+            white-space: nowrap;
+            display: inline-flex; align-items: center; gap: 6px;
+            transition: background 0.15s;
+        }
+        .back:hover { background: rgba(255,255,255,0.25); }
+
+        .hdr-stats { display: flex; gap: 6px; flex-wrap: wrap; }
+        .stat {
+            background: rgba(255,255,255,0.14);
+            border: 1px solid rgba(255,255,255,0.28);
+            border-radius: 4px;
+            padding: 4px 10px;
+            font-size: 12px;
+            font-weight: 500;
+            display: inline-flex; align-items: center; gap: 6px;
+        }
+        .stat.total {
+            background: var(--cherry);
+            border-color: var(--cherry-dk);
+            font-weight: 600;
+        }
+        .stat .dot { width: 6px; height: 6px; border-radius: 50%; }
+
+        /* ── Toolbar ───────────────────────────────── */
+        .toolbar {
             position: sticky;
             top: 0;
-            z-index: 100;
+            z-index: 10;
+            background: rgba(255,255,255,0.96);
+            backdrop-filter: saturate(140%) blur(8px);
+            -webkit-backdrop-filter: saturate(140%) blur(8px);
+            padding: 12px 0 10px;
+            border-bottom: 1px solid var(--line);
+            margin-bottom: 4px;
+        }
+        .search {
+            position: relative;
+            margin-bottom: 10px;
+        }
+        .search input {
+            width: 100%;
+            padding: 11px 38px 11px 38px;
+            border: 1px solid var(--line);
+            border-radius: 6px;
+            background: #fff;
+            font: 400 14px 'Inter', sans-serif;
+            color: var(--ink);
+        }
+        .search input::placeholder { color: var(--ink-soft); }
+        .search input:focus {
+            outline: none;
+            border-color: var(--green);
+            box-shadow: 0 0 0 3px rgba(10,107,58,0.15);
+        }
+        .search .ic-l {
+            position: absolute; left: 13px; top: 50%; transform: translateY(-50%);
+            color: var(--ink-soft); font-size: 13px; pointer-events: none;
+        }
+        .search .clr {
+            position: absolute; right: 8px; top: 50%; transform: translateY(-50%);
+            width: 24px; height: 24px; border: none;
+            background: var(--bg); color: var(--ink-soft);
+            border-radius: 50%; cursor: pointer;
+            display: none; font-size: 11px;
+            align-items: center; justify-content: center;
+        }
+        .search.has-val .clr { display: inline-flex; }
+
+        .tb-row {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .seg {
+            display: flex; gap: 3px;
+            background: var(--bg);
+            border: 1px solid var(--line);
+            border-radius: 6px;
+            padding: 3px;
+            flex: 1 1 260px;
+            min-width: 240px;
+        }
+        .seg button {
+            flex: 1; border: none; background: transparent;
+            padding: 8px 6px;
+            border-radius: 4px;
+            font: 600 12px 'Inter', sans-serif;
+            color: var(--ink-soft);
+            cursor: pointer;
+            letter-spacing: 0.02em;
+            display: inline-flex; align-items: center; justify-content: center; gap: 5px;
+            transition: background 0.15s, color 0.15s;
+        }
+        .seg button:hover { color: var(--green-dk); }
+        .seg button .dot { width: 7px; height: 7px; border-radius: 50%; }
+        .seg button[data-type="Red"]   .dot { background: var(--cherry); }
+        .seg button[data-type="White"] .dot { background: #D9BE7A; border: 1px solid #b3972f; }
+        .seg button[data-type="Other"] .dot { background: #B48A6C; }
+        .seg button.active {
+            background: var(--green);
+            color: #fff;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.08);
+        }
+        .seg button.active:hover { color: #fff; }
+        .seg button.active .dot { background: #fff !important; border-color: transparent !important; }
+        .seg button .c {
+            font-size: 11px;
+            opacity: 0.7;
+            font-weight: 500;
+            font-variant-numeric: tabular-nums;
+        }
+
+        .view-toggle {
+            display: inline-flex;
+            border: 1px solid var(--line);
+            border-radius: 6px;
+            overflow: hidden;
+            background: #fff;
+        }
+        .view-toggle button {
+            border: none;
+            background: #fff;
+            padding: 8px 12px;
+            color: var(--ink-soft);
+            cursor: pointer;
+            font: 500 12px 'Inter', sans-serif;
+            display: inline-flex; align-items: center; gap: 6px;
+            transition: background 0.15s, color 0.15s;
+        }
+        .view-toggle button + button { border-left: 1px solid var(--line); }
+        .view-toggle button:hover { background: var(--green-band); color: var(--green-dk); }
+        .view-toggle button.active {
+            background: var(--green);
+            color: #fff;
+        }
+
+        /* Meta row */
+        .meta {
+            padding: 10px 2px 8px;
+            font-size: 12px;
+            color: var(--ink-soft);
             display: flex;
             justify-content: space-between;
             align-items: center;
+            flex-wrap: wrap;
+            gap: 8px;
         }
-        
-        .modal-title {
-            font-size: 1.5rem;
-            margin: 0;
-            display: flex;
+        .meta strong { color: var(--green-dk); font-weight: 600; }
+        .meta .clear-all {
+            background: none; border: none;
+            color: var(--cherry);
+            text-decoration: underline;
+            cursor: pointer;
+            font: 500 12px 'Inter', sans-serif;
+            padding: 0;
+        }
+
+        /* ── Category section ──────────────────────── */
+        .section { margin-top: 10px; }
+        .cat-hdr {
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 10px 14px;
+            background: var(--green-band);
+            border: 1px solid #DCE6DF;
+            border-bottom: none;
+            border-radius: 4px 4px 0 0;
+            cursor: pointer;
+            user-select: none;
+            transition: background 0.15s;
+        }
+        .cat-hdr:hover { background: #EAF1EC; }
+        .cat-title {
+            font: 700 13px 'Inter', sans-serif;
+            color: var(--green-dk);
+            letter-spacing: 0.02em;
+            display: flex; align-items: center; gap: 8px;
+        }
+        .cat-title .dot { width: 8px; height: 8px; border-radius: 50%; }
+        .cat-title[data-cat="Red"]   .dot { background: var(--cherry); }
+        .cat-title[data-cat="White"] .dot { background: #D9BE7A; border: 1px solid #b3972f; }
+        .cat-title[data-cat="Other"] .dot { background: #B48A6C; }
+        .cat-title em {
+            font-style: italic; font-weight: 500;
+            color: var(--green-dk); opacity: 0.8;
+        }
+        .cat-meta {
+            font-size: 11px;
+            color: var(--green-dk);
+            display: flex; align-items: center; gap: 8px;
+            font-weight: 600;
+        }
+        .cat-meta .chev { transition: transform 0.25s; font-size: 10px; opacity: 0.7; }
+        .section.collapsed .chev { transform: rotate(-90deg); }
+        .section.collapsed .items { display: none; }
+        .section.collapsed .cat-hdr {
+            border-radius: 4px;
+            border-bottom: 1px solid #DCE6DF;
+        }
+
+        .items {
+            border: 1px solid var(--line);
+            border-top: none;
+            border-radius: 0 0 4px 4px;
+            background: #fff;
+        }
+
+        /* ── Wine row (list view) ──────────────────── */
+        .item {
+            display: grid;
+            grid-template-columns: 1fr auto;
+            gap: 12px;
+            padding: 11px 16px;
+            border-bottom: 1px solid var(--line-soft);
+            align-items: center;
+            transition: background 0.1s;
+        }
+        .item:last-child { border-bottom: none; }
+        .item:hover { background: #FAFBFA; }
+        .item .name {
+            font: 600 14px 'Inter', sans-serif;
+            color: var(--ink);
+            line-height: 1.25;
+            overflow-wrap: anywhere;
+        }
+        .item .sub {
+            margin-top: 2px;
+            font-size: 12px;
+            color: var(--ink-soft);
+            display: flex; flex-wrap: wrap; gap: 4px 8px;
             align-items: center;
         }
-        
-        .modal-close {
-            background: none;
-            border: none;
-            color: white;
-            font-size: 1.5rem;
-            cursor: pointer;
+        .item .sub em { font-style: italic; }
+        .item .sub .yr {
+            color: var(--cherry);
+            font-weight: 600;
+            font-variant-numeric: tabular-nums;
+            font-style: normal;
         }
-        
-        .modal-body {
+        .item .btls {
+            font: 700 16px 'Inter', sans-serif;
+            color: var(--cherry);
+            text-align: center;
+            min-width: 48px;
+            font-variant-numeric: tabular-nums;
+            line-height: 1;
+        }
+        .item .btls small {
+            display: block;
+            font-size: 9px;
+            color: var(--ink-soft);
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            font-weight: 600;
+            margin-top: 3px;
+        }
+
+        /* ── Grid view ─────────────────────────────── */
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+            gap: 8px;
             padding: 10px;
         }
-        .stat-title {
-            font-size: 0.9rem;
-            color: #666;
+        .card {
+            background: #fff;
+            border: 1px solid var(--line);
+            border-left: 3px solid var(--green);
+            border-radius: 6px;
+            padding: 12px 14px;
+            position: relative;
+            transition: box-shadow 0.15s, transform 0.1s;
         }
-        
-        .stat-number {
-            font-size: 1.6rem;
-            font-weight: bold;
-            color: var(--primary-color);
-            margin: 5px 0;
+        .card[data-type="Red"]   { border-left-color: var(--cherry); }
+        .card[data-type="White"] { border-left-color: #b3972f; }
+        .card[data-type="Other"] { border-left-color: #B48A6C; }
+        .card:hover {
+            box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+            transform: translateY(-1px);
         }
-        .wine-table-container,
-        .inventory-table-container {
-            width: 100%
-            overflow-x: auto;
-            border-style: border-box;
+        .card .name {
+            font: 600 14px 'Inter', sans-serif;
+            color: var(--ink);
+            line-height: 1.25;
+            padding-right: 44px;
+            margin-bottom: 4px;
+            overflow-wrap: anywhere;
         }
-        
-        .inventory-table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 20px;
+        .card .sub {
+            font-size: 12px;
+            color: var(--ink-soft);
+            display: flex; flex-wrap: wrap; gap: 4px 8px; align-items: center;
         }
-        
-        .inventory-table th {
-            background-color: #f5f5f5;
-            color: var(--primary-color);
-            font-weight: bold;
-            text-align: left;
-            padding: 12px 15px;
-            border-bottom: 2px solid #ddd;
-           /* position: sticky;*/
-            top: 65px;
+        .card .sub em { font-style: italic; }
+        .card .sub .yr {
+            color: var(--cherry);
+            font-weight: 600;
+            font-variant-numeric: tabular-nums;
+            font-style: normal;
         }
-        
-        .inventory-table td {
-            padding: 10px 15px;
-            border-bottom: 1px solid #eee;
-        }
-        
-        .inventory-table tr:hover {
-            background-color: #f9f9f9;
-        }
-        
-        .wine-year {
-            font-weight: bold;
-            color: var(--accent-color);
-        }
-        
-        .wine-type {
-            text-transform: capitalize;
-        }
-        
-        .wine-region {
-            color: #666;
-            font-style: italic;
-        }
-        
-        .empty-inventory {
+        .card .btls {
+            position: absolute;
+            top: 10px; right: 10px;
+            background: #FDECEE;
+            color: var(--cherry-dk);
+            border: 1px solid #F7D3D8;
+            border-radius: 999px;
+            font: 700 12px 'Inter', sans-serif;
+            padding: 2px 10px;
+            min-width: 36px;
             text-align: center;
-            padding: 30px;
-            color: #666;
+            font-variant-numeric: tabular-nums;
         }
-        .wine-category-header {
-            background-color: #f8f0f1;
-            color: #722F37;
-            padding: 6px 10px;
-            display: block;
-            border-bottom: 1px solid #ddd;
-            margin-top: 3px;
-            border-radius: 4px 4px 0 0;
-            min-height: 28px;
-        }
-        .wine-group-header {
-            background-color: #f0f0f0;
-            padding: 10px 15px;
-            font-weight: bold;
-            border-bottom: 1px solid #ddd;
-            color: #722F37;
-            margin-top: 15px;
-        }
-        .category-row {
-          padding: 5px 0;
-          background-color: #f8f0f1; /* Light background */
-        }
-        /* Add fixed column widths to ensure alignment */
-        .inventory-table th:nth-child(1),
-        .wine-category-table td:nth-child(1) {
-            width: 40%;
-        }
-        
-        .inventory-table th:nth-child(2),
-        .wine-category-table td:nth-child(2) {
-            width: 30%;
-        }
-        
-        .inventory-table th:nth-child(3),
-        .wine-category-table td:nth-child(3) {
-            width: 15%;
-        }
-        
-        .inventory-table th:nth-child(4),
-        .wine-category-table td:nth-child(4) {
-            width: 15%;
+
+        /* ── Empty / loading ───────────────────────── */
+        .empty {
             text-align: center;
-            padding-left: 20px;
+            padding: 50px 20px;
+            color: var(--ink-soft);
+            background: #fff;
+            border: 1px dashed var(--line);
+            border-radius: 6px;
+            margin: 16px 0;
         }
-        .wine-category-label {
-          color: #722F37;
-          font-weight: bold;
-          font-size: 12px;
-          line-height: 1.0;
-          padding-left: 10px;
-        }
-/* Enhanced typography and visual hierarchy for wine cards */
-        @media (max-width: 768px) {
-            .wine-card {
-                background: white;
-                border-radius: 6px;
-                box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-                padding: 14px 16px;
-                border-left: 4px solid #722F37;
-                margin-bottom: 12px;
-                position: relative;
-                transition: transform 0.2s ease;
-            }
-            
-            .wine-card:active {
-                transform: scale(0.98);
-            }
-            .wine-card-title {
-                font-size: 16px;
-                font-weight: 600;
-                color: #333333;
-                margin-bottom: 8px;
-                line-height: 1.3;
-                letter-spacing: 0.01em;
-            }
-            .wine-card-details {
-                display: flex;
-                justify-content: space-between;
-                align-items: center;
-            }
-            .wine-card-info {
-                font-size: 14px;
-                color: #666666;
-                word-break: break-word;
-                flex: 1;
-            }
-            .wine-year {
-                font-weight: 500;
-                color: #8B3A44;
-            }
-            .wine-varietal {
-                font-style: italic;
-            }
-            .wine-card-count {
-                font-weight: 600;
-                font-size: 15px;
-                color: #722F37;
-                background-color: #f8f0f1;
-                padding: 4px 10px;
-                border-radius: 12px;
-                margin-left: 10px;
-                white-space: nowrap;
-            }
-            .wine-category-header {
-                background: linear-gradient(to right, #722F37, #8B3A44);
-                color: white;
-                padding: 12px 16px;
-                font-size: 17px;
-                font-weight: 600;
-                border-radius: 6px 6px 0 0;
-                margin-top: 8px;
-                margin-bottom: 30px;
-                display: flex;
-                justify-content: space-between;
-                align-items: center;
-                position: relative;
-                top: 12px;
-                z-index: 10;
-                box-shadow: 0 2px 4px rgba(0,0,0,0.15);
-            }
-            
-            .wine-category-count {
-                font-size: 14px;
-                font-weight: normal;
-                opacity: 0.9;
-            }
-            
-            /* Improve the stats area */
-            .inventory-stats {
-                display: grid;
-                grid-template-columns: repeat(auto-fit, minmax(65px, 1fr));
-                gap: 2px;
-                margin: 0 0 0px 0;
-                background-color: #f9f9f9;
-                border-radius: 8px;
-                padding: 0px;
-            }
-            
-            .inventory-stat {
-                text-align: center;
-                background-color: white;
-                border-radius: 6px;
-                padding: 10px 6px;
-                box-shadow: 0 1px 2px rgba(0,0,0,0.05);
-            }
-            
-            .stat-title {
-                font-size: 12px;
-                color: #666666;
-                margin-bottom: 4px;
-            }
-            
-            .stat-number {
-                font-size: 18px;
-                font-weight: 600;
-                color: #722F37;
-            }
-            
-            /* Empty category message */
-            .empty-category {
-                text-align: center;
-                padding: 20px;
-                color: #666;
-                font-style: italic;
-            }
-        }
-        .inventory-table.main-headers-only {
-            margin-bottom: 15px;
-        }
-        
-        .wine-category-table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-bottom: 20px;
-        }
-        
-        .wine-category-table td {
-            padding: 10px 15px;
-            border-bottom: 1px solid #eee;
-        }
-        
-        .wine-category-table tr:hover {
-            background-color: #f9f9f9;
-        }
-        
-        /* Fallback message */
-        .fallback-message {
+        .empty i { font-size: 28px; color: var(--green); margin-bottom: 10px; display: block; }
+        .empty h3 { font: 600 16px 'Inter', sans-serif; color: var(--green-dk); margin-bottom: 4px; }
+        .empty p { font-size: 13px; }
+        .loading {
             text-align: center;
-            padding: 30px;
-            background-color: #f9f9f9;
-            border-radius: 8px;
-            margin: 20px 0;
+            padding: 50px 20px;
+            color: var(--ink-soft);
         }
-        
-        .error-details {
-            margin-top: 10px;
-            font-size: 14px;
-            color: #666;
+        .loader {
+            border: 3px solid var(--line);
+            border-top-color: var(--green);
+            border-radius: 50%;
+            width: 36px; height: 36px;
+            animation: spin 0.9s linear infinite;
+            margin: 0 auto 14px;
+        }
+
+        /* ── Responsive ────────────────────────────── */
+        @media (max-width: 640px) {
+            .wrap { padding: 12px 12px 32px; }
+            .hdr { padding: 16px; }
+            .hdr-top { flex-direction: column-reverse; align-items: stretch; }
+            .back { align-self: flex-start; }
+            .hdr-title h2 { font-size: 22px; }
+            .toolbar { padding: 10px 0 8px; }
+            .tb-row { flex-direction: column; align-items: stretch; gap: 8px; }
+            .seg { flex: 1 1 auto; min-width: 0; }
+            .seg button { padding: 9px 4px; font-size: 11px; }
+            .seg button .c { display: none; }
+            .view-toggle { width: 100%; }
+            .view-toggle button { flex: 1; justify-content: center; }
+            .view-toggle button span { display: none; }
+            .grid { grid-template-columns: 1fr; padding: 8px; }
+            .item { padding: 11px 12px; }
+            .item .name { font-size: 13px; }
+            .item .sub { font-size: 11px; }
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <header>
-            <h1>Wine Locker Directory</h1>
-            <p class="subtitle">Browse all wine lockers below</p>
-        </header>
-        
-        <div class="search-container">
-            <input type="text" id="search" placeholder="Search by name...">
-            <i class="fas fa-search search-icon"></i>
-        </div>
-        
-        <div id="loading" class="loading">
-            <div class="loader"></div>
-            <p>Loading wine inventory data...</p>
-        </div>
-        
-        <div id="error" class="error" style="display: none;"></div>
-        
-        <div id="directory" class="directory"></div>
-        
-        <div class="updated-time" id="updated-time"></div>
-    </div>
-    
-    <!-- Detail Modal -->
-    <div id="detail-modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h2 class="modal-title"><i class="fas fa-wine-bottle wine-icon"></i> <span id="modal-collector-name"></span></h2>
-                <button class="modal-close"><i class="fas fa-times"></i></button>
-            </div>
-            <div class="modal-body">
-                <div class="inventory-stats" id="inventory-stats">
-                </div>
-                
-                <div id="inventory-content">
-                </div>
-            </div>
+
+<div class="wrap">
+
+    <!-- Landing -->
+    <div id="landing">
+        <div class="landing-card">
+            <div class="landing-icon"><i class="fas fa-wine-glass-alt"></i></div>
+            <h1>Wine Society Lockers</h1>
+            <p class="sub">Search by your name to view your locker inventory</p>
+            <form id="mform" autocomplete="off">
+                <input type="text" id="minput" placeholder="Enter your name..."
+                       autocorrect="off" autocapitalize="off" spellcheck="false">
+                <div id="matches-list"></div>
+                <button type="submit" id="mbtn">
+                    View My Locker &nbsp;<i class="fas fa-arrow-right"></i>
+                </button>
+                <div id="merror"></div>
+                <p class="hint" id="loading-hint">Loading directory data...</p>
+            </form>
         </div>
     </div>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const directoryEl = document.getElementById('directory');
-            const loadingEl = document.getElementById('loading');
-            const errorEl = document.getElementById('error');
-            const searchEl = document.getElementById('search');
-            const updatedTimeEl = document.getElementById('updated-time');
-            
-            // Modal elements
-            const detailModal = document.getElementById('detail-modal');
-            const modalCollectorName = document.getElementById('modal-collector-name');
-            const inventoryStats = document.getElementById('inventory-stats');
-            const inventoryContent = document.getElementById('inventory-content');
-            const modalClose = document.querySelector('.modal-close');
-            
-            // For this example, we'll use Table_Directory.json as the main directory data
-            const directoryUrl = 'Table_Directory.json';
-            
-            let wineData = [];
-            let totalBottlesCount = 0;
-            let jsonFilesBottleCount = {}; // Store bottle counts from individual JSON files
-            let varietalTypeMap = {};
+    <!-- Locker -->
+    <div id="locker">
+        <div class="hdr">
+            <div class="hdr-top">
+                <div class="hdr-title">
+                    <h2 id="m-name"></h2>
+                    <div class="mem" id="m-sub">Wine Locker</div>
+                </div>
+                <button class="back" id="back"><i class="fas fa-chevron-left"></i> All Lockers</button>
+            </div>
+            <div class="hdr-stats" id="m-stats"></div>
+        </div>
 
+        <div class="toolbar">
+            <div class="search" id="search-wrap">
+                <i class="fas fa-magnifying-glass ic-l"></i>
+                <input id="s" type="text"
+                       placeholder="Search by wine, varietal, year..." autocomplete="off">
+                <button class="clr" id="sc" aria-label="Clear"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="tb-row">
+                <div class="seg" id="seg">
+                    <button class="active" data-type="All">All <span class="c" data-c="All"></span></button>
+                    <button data-type="Red"><span class="dot"></span>Red <span class="c" data-c="Red"></span></button>
+                    <button data-type="White"><span class="dot"></span>White <span class="c" data-c="White"></span></button>
+                    <button data-type="Other"><span class="dot"></span>Other <span class="c" data-c="Other"></span></button>
+                </div>
+                <div class="view-toggle" role="tablist" aria-label="View">
+                    <button class="active" data-view="list" title="List">
+                        <i class="fas fa-list-ul"></i><span>&nbsp;List</span>
+                    </button>
+                    <button data-view="grid" title="Grid">
+                        <i class="fas fa-table-cells-large"></i><span>&nbsp;Grid</span>
+                    </button>
+                </div>
+            </div>
+        </div>
 
-            function loadVarietalMapping() {
-                return fetch('winevarietals.json')
-                    .then(response => {
-                        if (!response.ok) {
-                            console.warn('Could not load varietal mapping data.');
-                            return null;
-                        }
-                        return response.json();
-                    })
-                    .then(data => {
-                        if (!data) return;
+        <div class="meta" id="meta"></div>
+        <div id="content"></div>
+    </div>
 
-                        const varietalsList = data.value || data;
-                
-                        varietalsList.forEach(item => {
-                            if (item.Varietal) {
-                                varietalTypeMap[item.Varietal.toLowerCase()] = item.Type || 'Other';
-                            }
-                        });
-                
-                        console.log('Loaded varietal mappings:', Object.keys(varietalTypeMap).length);
-                    })
-                    .catch(error => {
-                        console.error('Error loading varietal data:', error);
-                    });
-            }
-    
-            function getWineType(varietal) {
-        // If we have a varietal, try to look it up in our mapping
-                if (varietal && varietal.trim() !== '' && varietal !== 'N/A') {
-                    const type = varietalTypeMap[varietal.toLowerCase()];
-                    if (type) {
-                        return type;
-                    }
-                }
-        
-        // If not found, return "Other" as default
-                return 'Other';
-            }
-            
-            // Function to calculate inventory statistics
-            function calculateInventoryStats(wines) {
-                let totalBottles = 0;
-                let redWines = 0;
-                let whiteWines = 0;
-                let otherWines = 0;
-    
-                wines.forEach(wine => {
-                    const bottles = Number(wine.bottles) || 0;
-                    totalBottles += bottles;
-        
-        // Use our classification function
-                    const wineType = wine.type;
-        
-                    if (wineType === 'Red') {
-                        redWines += bottles;
-                    } else if (wineType === 'White') {
-                        whiteWines += bottles;
-                    } else {
-                        otherWines += bottles;
-                    }
-                });
-    
-                return {
-                    totalBottles,
-                    redWines,
-                    whiteWines,
-                    otherWines
-                };
-            }
-// First load the varietal mapping, then proceed with the rest
-            loadVarietalMapping()
-                .then(() => {
-                    console.log('Varietal mapping loaded, proceeding with directory data');
-                    return fetch(directoryUrl);
-                })
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error('Failed to load directory data. Please ensure Table_Directory.json exists.');
-                    }
-                    return response.json();
-                })
-                .then(data => {
-                    console.log('Directory data loaded successfully:', data);
-                    
-                    // Handle different data formats
-                    if (data.value && Array.isArray(data.value)) {
-                        wineData = data.value;
-                    } else if (Array.isArray(data)) {
-                        wineData = data;
-                    } else {
-                        try {
-                            // Try to convert to array if it's an object
-                            wineData = Object.values(data);
-                            console.log('Converted data to array:', wineData.slice(0, 3));
-                        } catch (e) {
-                            console.error('Could not convert data to array:', e);
-                            wineData = [];
-                        }
-                    }
-                    
-                    // Start loading all individual JSON files
-                    return loadAllBottleCounts(wineData);
-                })
-                .then(() => {
-                    loadingEl.style.display = 'none';
-                    
-                    // Check if data is an array
-                    if (!Array.isArray(wineData)) {
-                        console.error('Wine data is not an array:', wineData);
-                        throw new Error('Data format error: Expected an array of wine lockers');
-                    }
-                    
-                    if (wineData.length === 0) {
-                        throw new Error('No wine inventory data found in the directory.');
-                    }
-                    
-                    console.log(`Loaded ${wineData.length} collector entries.`);
-                    
-                    // Sort the data alphabetically by last name
-                    wineData.sort((a, b) => {
-                        const nameA = a["Sheet Name"] || "";
-                        const nameB = b["Sheet Name"] || "";
-                        
-                        // Function to extract last name
-                        const getLastName = (name) => {
-                            // For format like "J. Smith" or "John Smith"
-                            const parts = name.split(' ');
-                            if (parts.length > 1) {
-                                return parts[parts.length - 1]; // Get the last part as last name
-                            }
-                            return name; // If only one part, use the whole name
-                        };
-                        
-                        const lastNameA = getLastName(nameA);
-                        const lastNameB = getLastName(nameB);
-                        
-                        return lastNameA.localeCompare(lastNameB);
-                    });
-                    
-                    // Render directory
-                    renderDirectory(wineData);
-                    
-                    // Set updated time
-                    const now = new Date();
-                    updatedTimeEl.textContent = `Last updated: ${now.toLocaleString()}`;
-                })
-                .catch(error => {
-                    loadingEl.style.display = 'none';
-                    errorEl.style.display = 'block';
-                    errorEl.innerHTML = `
-                        <p>Error: ${error.message}</p>
-                        <p style="font-size: 0.9em; margin-top: 10px;">
-                            Check browser console for more details.
-                        </p>
-                    `;
-                    console.error('Error loading data:', error);
-                });
-            
-            // Load all JSON files to get total bottle counts
-            function loadAllBottleCounts(data) {
-                if (!Array.isArray(data)) {
-                    console.error('Cannot load bottle counts: data is not an array');
-                    return Promise.resolve(); // Return a resolved promise to continue the chain
-                }
-                
-                const promises = [];
-                
-                data.forEach(locker => {
-                    const collectorName = locker["Sheet Name"] || "Unknown";
-                    const formattedName = collectorName.replace(/\s+/g, '_');
-                    const lockerDataUrl = `Table_${formattedName}.json`;
-                    
-                    const promise = fetch(lockerDataUrl)
-                        .then(response => {
-                            if (!response.ok) {
-                                console.warn(`Could not load data file for ${collectorName}, using directory count`);
-                                // Use the count from the directory as a fallback
-                                const bottleCount = locker["_x0023_ bottles"] || 
-                                                 locker["# bottles"] || 
-                                                 locker["Bottles"] || 
-                                                 0;
-                                jsonFilesBottleCount[collectorName] = Number(bottleCount) || 0;
-                                return null;
-                            }
-                            return response.json();
-                        })
-                        .then(jsonData => {
-                            // Calculate total bottles directly from the JSON data
-                            if (jsonData && Array.isArray(jsonData)) {
-                                let bottlesCount = 0;
-                                jsonData.forEach(item => {
-                                    bottlesCount += Number(item.Bottles) || 0;
-                                });
-                                jsonFilesBottleCount[collectorName] = bottlesCount;
-                                
-                                // Keep a running total
-                                totalBottlesCount += bottlesCount;
-                            }
-                        })
-                        .catch(error => {
-                            console.error(`Error loading JSON for ${collectorName}:`, error);
-                            // Use directory count as fallback
-                            const bottleCount = locker["_x0023_ bottles"] || 
-                                             locker["# bottles"] || 
-                                             locker["Bottles"] || 
-                                             0;
-                            jsonFilesBottleCount[collectorName] = Number(bottleCount) || 0;
-                        });
-                    
-                    promises.push(promise);
-                });
-                
-                return Promise.all(promises);
-            }
-            
-            // Search functionality
-            searchEl.addEventListener('input', function() {
-                const searchTerm = this.value.toLowerCase().trim();
-                
-                if (searchTerm === '') {
-                    renderDirectory(wineData);
-                    return;
-                }
-                
-                const filteredData = wineData.filter(item => {
-                    const collectorName = (item["Sheet Name"] || "").toLowerCase();
-                    return collectorName.includes(searchTerm);
-                });
-                
-                renderDirectory(filteredData);
-            });
-            
-            // Close the modal when close button is clicked
-            modalClose.addEventListener('click', function() {
-                closeDetailModal();
-            });
-            
-            // Close modal when clicking outside the content
-            detailModal.addEventListener('click', function(e) {
-                if (e.target === detailModal) {
-                    closeDetailModal();
-                }
-            });
-            
-            // Calculate total bottles for a locker
-            function calculateTotalBottles(wines) {
-                let total = 0;
-                if (Array.isArray(wines)) {
-                    wines.forEach(wine => {
-                        total += Number(wine.Bottles) || 0;
-                    });
-                }
-                return total;
-            }
-            
-            // Render the directory cards
-            function renderDirectory(data) {
-                directoryEl.innerHTML = '';
-                
-                if (!Array.isArray(data)) {
-                    console.error('Cannot render directory: data is not an array');
-                    directoryEl.innerHTML = '<div class="error">Error: Invalid data format. Please check the console for details.</div>';
-                    return;
-                }
-                
-                if (data.length === 0) {
-                    directoryEl.innerHTML = '<div class="no-results">No wine lockers found matching your search.</div>';
-                    return;
-                }
-                
-                data.forEach(locker => {
-                    const card = document.createElement('div');
-                    card.className = 'collector-card';
-                    
-                    // Get the collector name from "Sheet Name" property
-                    const collectorName = locker["Sheet Name"] || "Unknown";
-                    
-                    // Get bottle count from the individually loaded JSON files
-                    const bottleCount = jsonFilesBottleCount[collectorName] || 0;
-                    
-                    card.innerHTML = `
-                        <div class="card-header">
-                            <div class="sheet-name">${collectorName}</div>
-                        </div>
-                        <div class="card-body">
-                            <i class="fas fa-wine-bottle wine-icon"></i>
-                            <div class="bottle-count">${bottleCount}</div>
-                            <div class="bottle-label">bottles</div>
-                        </div>
-                        <div class="card-footer">
-                            <a class="view-link view-detail" data-name="${collectorName}">
-                                View Details <i class="fas fa-search-plus"></i>
-                            </a>
-                        </div>
-                    `;
-                    
-                    // Add click event to show details
-                    const viewDetailBtn = card.querySelector('.view-detail');
-                    viewDetailBtn.addEventListener('click', function(e) {
-                        e.preventDefault();
-                        e.stopPropagation();
-                        const lockerName = this.getAttribute('data-name');
-                        showLockerDetails(lockerName);
-                    });
-                    
-                    // Make whole card clickable to view details
-                    card.addEventListener('click', function(e) {
-                        if (!e.target.closest('a')) {
-                            const viewBtn = card.querySelector('.view-detail');
-                            viewBtn.click();
-                        }
-                    });
-                    
-                    directoryEl.appendChild(card);
-                });
-            }
-            
-            // Show locker details
-            function showLockerDetails(lockerName) {
-                modalCollectorName.textContent = lockerName;
-                
-                // Clear previous content
-                inventoryStats.innerHTML = '';
-                inventoryContent.innerHTML = `
-                    <div class="loading">
-                        <div class="loader"></div>
-                        <p>Loading detailed inventory data...</p>
-                    </div>
-                `;
-                
-                // Show the modal
-                detailModal.style.display = 'flex';
-                document.body.style.overflow = 'hidden'; // Prevent scrolling behind modal
-                
-                // Replace all spaces with underscores for the filename
-                const formattedName = lockerName.replace(/\s+/g, '_');
-                const lockerDataUrl = `Table_${formattedName}.json`;
-                
-                console.log(`Attempting to fetch: ${lockerDataUrl} for "${lockerName}"`);
-                
-                // Fetch the wine data using the consistent naming pattern
-                fetch(lockerDataUrl)
-                    .then(response => {
-                        if (!response.ok) {
-                            console.error(`Failed to load: ${lockerDataUrl} (Status: ${response.status})`);
-                            throw new Error(`Could not load wine data for ${lockerName}`);
-                        }
-                        return response.json();
-                    })
-                    .then(data => {
-                        console.log("Successfully loaded data:", data);
-                        renderLockerDetails(data, lockerName);
-                    })
-                    .catch(error => {
-                        console.error('Error loading detail data:', error);
-                        
-                        // Show error message
-                        inventoryContent.innerHTML = `
-                            <div class="fallback-message">
-                                <p>Couldn't load data for ${lockerName}'s locker.</p>
-                                <p class="error-details">Error: ${error.message}</p>
-                            </div>
-                        `;
-                    });
-            }
-            // Updated renderLockerDetails function with improved typography
-            function renderLockerDetails(data, lockerName) {
-                if (!data || !Array.isArray(data) || data.length === 0) {
-                    inventoryContent.innerHTML = `
-                        <div class="empty-inventory">
-                            <p>No wine inventory data available for ${lockerName}.</p>
-                        </div>
-                    `;
-                    return;
-                }
-                
-                // Process the wines data from the Table JSON format
-                const wines = data
-                    .map(item => {
-                        const wineName = (item.Wine || '').trim();
-                        const varietal = (item.Varietal || '').trim();
-                        const type = getWineType(varietal);
-                        return {
-                            name: wineName,
-                            varietal: varietal || 'N/A',
-                            year: item.Year || 'N/A',
-                            bottles: Number(item.Bottles) || 0,
-                            type: type
-                        };
-                    })
-                    .filter(wine => wine.bottles > 0);
-                
-                const groupedWines = {
-                    'White': wines.filter(wine => wine.type === 'White'),
-                    'Red': wines.filter(wine => wine.type === 'Red'),
-                    'Other': wines.filter(wine => wine.type === 'Other')
-                };  
-            
-                // Sort wines alphabetically within each category
-                Object.keys(groupedWines).forEach(type => {
-                    groupedWines[type].sort((a,b) => a.name.localeCompare(b.name));
-                });
-                
-                // Calculate stats from the wines array
-                const stats = calculateInventoryStats(wines);
-                // Use card layout for mobile, table for desktop
-                const isMobile = window.innerWidth <= 768;
-                
-                let contentHTML = '';
-                
-                if (isMobile) {
-                    // Enhanced card-based mobile layout with better typography
-                    contentHTML = `<div id="wine-categories-container">`;
-                    
-                    // Process each wine type
-                    ['Red', 'White', 'Other'].forEach(type => {
-                        if (groupedWines[type].length > 0) {
-                            const totalBottles = groupedWines[type].reduce((sum, wine) => sum + wine.bottles, 0);
-                            
-                            contentHTML += `
-                                <div class="wine-category-section">
-                                    <div class="wine-category-header" data-category="${type}">
-                                        ${type} Wines <span class="wine-category-count">(${totalBottles} bottles)</span>
-                                    </div>
-                                    <div class="wine-cards" data-category="${type}">
-                            `;
-                            
-                            groupedWines[type].forEach(wine => {
-                                // Format the year for display
-                                const yearDisplay = wine.year !== 'N/A' ? 
-                                    `<span class="wine-year">${wine.year}</span>` : '';
-                                
-                                // Format bottles text
-                                const bottleText = wine.bottles === 1 ? 'bottle' : 'bottles';
-                                
-                                contentHTML += `
-                                    <div class="wine-card">
-                                        <div class="wine-card-title">${wine.name || 'Unknown'}</div>
-                                        <div class="wine-card-details">
-                                            <div class="wine-card-info">
-                                                <span class="wine-varietal">${wine.varietal || 'N/A'}</span>
-                                                ${wine.year !== 'N/A' ? ` · ${yearDisplay}` : ''}
-                                            </div>
-                                            <div class="wine-card-count">${wine.bottles} ${bottleText}</div>
-                                        </div>
-                                    </div>
-                                `;
-                            });
-                            
-                            contentHTML += `
-                                    </div>
-                                </div>
-                            `;
-                        }
-                    });
-    
-                    contentHTML += `</div>`;
-                } else {
-                    // Standard table layout for desktop (keep your existing code)
-                    contentHTML = `
-                        <div class="inventory-table-container">
-                            <table class="inventory-table main-headers-only">
-                                <thead>
-                                    <tr>
-                                        <th>Wine</th>
-                                        <th>Varietal</th>
-                                        <th>Year</th>
-                                        <th>Bottles</th>
-                                    </tr>
-                                </thead>
-                            </table>
-                            <div id="wine-categories-container">
-                    `;
+</div>
 
-                    ['White', 'Red', 'Other'].forEach(type => {
-                        if (groupedWines[type].length > 0) {
-                            const totalBottles = groupedWines[type].reduce((sum, wine) => sum + wine.bottles, 0);
-                            
-                            contentHTML += `
-                                <div class="wine-table-container">
-                                    <div class="wine-category-header">
-                                        ${type} Wines - <i>${totalBottles} total</i>
-                                    </div>
-                                    <table class="wine-category-table">
-                                        <tbody>
-                            `;
-                            
-                            groupedWines[type].forEach(wine => {
-                                contentHTML += `
-                                    <tr>
-                                        <td>${wine.name || 'Unknown'}</td>
-                                        <td>${wine.varietal || 'N/A'}</td>
-                                        <td>${wine.year || 'N/A'}</td>
-                                        <td>${wine.bottles || 0}</td>
-                                    </tr>
-                                `;
-                            });
-                            
-                            contentHTML += `
-                                        </tbody>
-                                    </table>
-                                </div>
-                            `;
-                        }
-                    });
-                    
-                    contentHTML += `
-                            </div>
-                        </div>
-                    `;
-                }
-                
-                inventoryContent.innerHTML = contentHTML;
-                // Add the collapsible functionality, but only for mobile
-                if (isMobile) {
-                    // Add styles for the toggle icons
-                    const collapsibleStyles = document.createElement('style');
-                    collapsibleStyles.textContent = `
-                        @media (max-width: 768px) {
-                            .wine-category-header {
-                                cursor: pointer;
-                                position: relative;
-                                padding-right: 40px;
-                            }
-                            
-                            .category-toggle {
-                                position: absolute;
-                                right: 16px;
-                                top: 50%;
-                                transform: translateY(-50%);
-                                color: rgba(255,255,255,0.9);
-                                font-size: 16px;
-                            }
-                            
-                            .category-toggle i {
-                                transition: transform 0.6s ease;
-                            }
-                            
-                            .wine-cards {
-                                transition: max-height 0.6s ease-in-out, opacity 0.5s ease;
-                                overflow: hidden;
-                                will-change: max-height;
-                            }
-                        }
-                    `;
-                    document.head.appendChild(collapsibleStyles);
-                    
-                    // Wait a moment for the DOM to update
-                    setTimeout(() => {
-                        // Get all category headers
-                        const categoryHeaders = document.querySelectorAll('.wine-category-header');
-                        
-                        categoryHeaders.forEach(header => {
-                            // Add toggle icon
-                            const toggleIcon = document.createElement('span');
-                            toggleIcon.className = 'category-toggle';
-                            toggleIcon.innerHTML = '<i class="fas fa-chevron-up"></i>';
-                            header.appendChild(toggleIcon);
-                            
-                            // Get the next element (the wine cards container)
-                            const cardsContainer = header.nextElementSibling;
-                            
-                            // Add click event
-                            header.addEventListener('click', function() {
-                                // Toggle visibility
-                                const icon = this.querySelector('.category-toggle i');
-                                
-                                if (cardsContainer.style.display === 'none') {
-                                    cardsContainer.style.display = 'block';
-                                    icon.className = 'fas fa-chevron-up';
-                                } else {
-                                    cardsContainer.style.display = 'none';
-                                    icon.className = 'fas fa-chevron-down';
-                                }
-                            });
-                        });
-                    }, 100);
-                }
-            }
-                        
-            // Close the detail modal
-            function closeDetailModal() {
-                detailModal.style.display = 'none';
-                document.body.style.overflow = ''; // Restore scrolling
-            }
-            
-            // Handle escape key to close modal
-            document.addEventListener('keydown', function(e) {
-                if (e.key === 'Escape' && detailModal.style.display === 'flex') {
-                    closeDetailModal();
-                }
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+
+    // ── Elements ──────────────────────────────────────
+    const landing     = document.getElementById('landing');
+    const lockerEl    = document.getElementById('locker');
+    const mform       = document.getElementById('mform');
+    const minput      = document.getElementById('minput');
+    const merror      = document.getElementById('merror');
+    const mbtn        = document.getElementById('mbtn');
+    const matchesList = document.getElementById('matches-list');
+    const loadingHint = document.getElementById('loading-hint');
+    const backBtn     = document.getElementById('back');
+    const mNameEl     = document.getElementById('m-name');
+    const mSubEl      = document.getElementById('m-sub');
+    const mStatsEl    = document.getElementById('m-stats');
+    const seg         = document.getElementById('seg');
+    const sEl         = document.getElementById('s');
+    const sw          = document.getElementById('search-wrap');
+    const sc          = document.getElementById('sc');
+    const metaEl      = document.getElementById('meta');
+    const contentEl   = document.getElementById('content');
+    const viewBtns    = document.querySelectorAll('.view-toggle button');
+
+    // ── App state ─────────────────────────────────────
+    let wineData      = [];   // directory entries
+    let varietalTypeMap = {};
+    let currentWines  = [];   // wines for currently open locker
+    const state = { search: '', type: 'All', view: 'list', collapsed: new Set() };
+
+    // ── Varietal → type mapping ───────────────────────
+    function loadVarietalMapping() {
+        return fetch('winevarietals.json')
+            .then(r => r.ok ? r.json() : null)
+            .then(data => {
+                if (!data) return;
+                (data.value || data).forEach(item => {
+                    if (item.Varietal) {
+                        varietalTypeMap[item.Varietal.toLowerCase()] = item.Type || 'Other';
+                    }
+                });
+            })
+            .catch(() => {});
+    }
+
+    function getWineType(varietal) {
+        if (varietal && varietal.trim() && varietal !== 'N/A') {
+            const t = varietalTypeMap[varietal.toLowerCase()];
+            if (t) return t;
+        }
+        return 'Other';
+    }
+
+    function normalizeWines(data) {
+        return (data || [])
+            .map(item => ({
+                name:     (item.Wine || '').trim() || 'Unknown',
+                varietal: (item.Varietal || '').trim() || 'N/A',
+                year:     item.Year === '' || item.Year == null ? null
+                              : (isFinite(+item.Year) ? +item.Year : item.Year),
+                bottles:  Number(item.Bottles) || 0,
+                type:     getWineType((item.Varietal || '').trim())
+            }))
+            .filter(w => w.bottles > 0);
+    }
+
+    // ── Directory loading ─────────────────────────────
+    loadVarietalMapping().then(() => {
+        return fetch('Table_Directory.json');
+    }).then(r => {
+        if (!r.ok) throw new Error('Could not load directory.');
+        return r.json();
+    }).then(data => {
+        if (data.value && Array.isArray(data.value)) {
+            wineData = data.value;
+        } else if (Array.isArray(data)) {
+            wineData = data;
+        } else {
+            wineData = Object.values(data);
+        }
+        // Sort alphabetically by last name
+        wineData.sort((a, b) => {
+            const lastName = n => { const p = (n || '').split(' '); return p[p.length - 1]; };
+            return lastName(a['Sheet Name']).localeCompare(lastName(b['Sheet Name']));
+        });
+        loadingHint.textContent = wineData.length + ' members loaded';
+        setTimeout(() => { loadingHint.style.display = 'none'; }, 2000);
+        minput.disabled = false;
+        mbtn.disabled = false;
+        mbtn.innerHTML = 'View My Locker &nbsp;<i class="fas fa-arrow-right"></i>';
+        minput.focus();
+    }).catch(err => {
+        loadingHint.textContent = 'Could not load directory: ' + err.message;
+        loadingHint.style.color = '#c00';
+    });
+
+    // Disable inputs while loading
+    minput.disabled = true;
+    mbtn.disabled = true;
+    mbtn.innerHTML = '<div class="loader" style="width:18px;height:18px;border-width:2px;margin:0 auto;"></div>';
+
+    // ── Landing form ──────────────────────────────────
+    minput.addEventListener('input', () => {
+        clearError();
+        const q = minput.value.trim().toLowerCase();
+        if (!q || wineData.length === 0) {
+            matchesList.style.display = 'none';
+            matchesList.innerHTML = '';
+            return;
+        }
+        const matches = wineData.filter(m =>
+            (m['Sheet Name'] || '').toLowerCase().includes(q)
+        );
+        if (matches.length === 0 || (matches.length === 1 && matches[0]['Sheet Name'].toLowerCase() === q)) {
+            matchesList.style.display = 'none';
+            matchesList.innerHTML = '';
+            return;
+        }
+        matchesList.innerHTML = matches.slice(0, 8).map(m => {
+            const name = esc(m['Sheet Name'] || 'Unknown');
+            return `<div class="match-item" data-name="${name}">
+                <span class="match-name">${name}</span>
+                <span class="match-bottles"><i class="fas fa-wine-bottle" style="font-size:10px;opacity:0.5;margin-right:3px;"></i>View locker</span>
+            </div>`;
+        }).join('');
+        matchesList.style.display = 'block';
+
+        matchesList.querySelectorAll('.match-item').forEach(el => {
+            el.addEventListener('click', () => {
+                const name = el.dataset.name;
+                minput.value = name;
+                matchesList.style.display = 'none';
+                matchesList.innerHTML = '';
+                const member = wineData.find(m => (m['Sheet Name'] || '') === name);
+                if (member) openLocker(member);
             });
         });
-    </script>
+    });
+
+    mform.addEventListener('submit', e => {
+        e.preventDefault();
+        matchesList.style.display = 'none';
+        const q = minput.value.trim().toLowerCase();
+        if (!q) { showError('Please enter your name.'); return; }
+        const matches = wineData.filter(m =>
+            (m['Sheet Name'] || '').toLowerCase().includes(q)
+        );
+        if (!matches.length) { showError('No member found. Please check the spelling.'); return; }
+        if (matches.length === 1) {
+            openLocker(matches[0]);
+        } else {
+            // Show picker inline if multiple match
+            matchesList.innerHTML = '<div style="padding:8px 12px;font-size:12px;color:var(--ink-soft);font-weight:600;border-bottom:1px solid var(--line-soft);">Multiple members found — select yours:</div>'
+                + matches.slice(0, 10).map(m => {
+                    const name = esc(m['Sheet Name'] || 'Unknown');
+                    return `<div class="match-item" data-name="${name}">
+                        <span class="match-name">${name}</span>
+                        <span class="match-bottles">View locker</span>
+                    </div>`;
+                }).join('');
+            matchesList.style.display = 'block';
+            matchesList.querySelectorAll('.match-item').forEach(el => {
+                el.addEventListener('click', () => {
+                    const name = el.dataset.name;
+                    minput.value = name;
+                    matchesList.style.display = 'none';
+                    const member = wineData.find(m => (m['Sheet Name'] || '') === name);
+                    if (member) openLocker(member);
+                });
+            });
+        }
+    });
+
+    function showError(msg) {
+        merror.textContent = msg;
+        merror.style.display = 'block';
+        merror.style.animation = 'none';
+        merror.offsetHeight;
+        merror.style.animation = '';
+    }
+    function clearError() { merror.style.display = 'none'; merror.textContent = ''; }
+
+    // ── Open a locker ─────────────────────────────────
+    function openLocker(lockerEntry) {
+        const name = lockerEntry['Sheet Name'] || 'Unknown';
+        mNameEl.textContent = name;
+        mSubEl.textContent  = 'Wine Locker';
+        mStatsEl.innerHTML  = '';
+        contentEl.innerHTML = '<div class="loading"><div class="loader"></div><p>Loading inventory…</p></div>';
+        metaEl.innerHTML    = '';
+
+        landing.style.display  = 'none';
+        lockerEl.style.display = 'block';
+        lockerEl.style.animation = 'none';
+        lockerEl.offsetHeight;
+        lockerEl.style.animation = '';
+
+        resetFilters();
+
+        const formattedName = name.replace(/\s+/g, '_');
+        fetch(`Table_${formattedName}.json`)
+            .then(r => {
+                if (!r.ok) throw new Error(`Could not load data for ${name}.`);
+                return r.json();
+            })
+            .then(data => {
+                currentWines = normalizeWines(Array.isArray(data) ? data : (data.value || []));
+                updateHeaderStats();
+                render();
+            })
+            .catch(err => {
+                contentEl.innerHTML = `<div class="empty">
+                    <i class="fas fa-wine-glass"></i>
+                    <h3>Couldn't load locker</h3>
+                    <p>${esc(err.message)}</p>
+                </div>`;
+            });
+    }
+
+    function updateHeaderStats() {
+        const reds   = currentWines.filter(w => w.type === 'Red')  .reduce((s,w) => s + w.bottles, 0);
+        const whites = currentWines.filter(w => w.type === 'White').reduce((s,w) => s + w.bottles, 0);
+        const others = currentWines.filter(w => w.type === 'Other').reduce((s,w) => s + w.bottles, 0);
+        const total  = reds + whites + others;
+
+        document.querySelector('[data-c="All"]').textContent   = '(' + total  + ')';
+        document.querySelector('[data-c="Red"]').textContent   = '(' + reds   + ')';
+        document.querySelector('[data-c="White"]').textContent = '(' + whites + ')';
+        document.querySelector('[data-c="Other"]').textContent = '(' + others + ')';
+
+        mStatsEl.innerHTML = [
+            `<div class="stat total"><i class="fas fa-wine-bottle"></i> ${total} bottle${total===1?'':'s'}</div>`,
+            reds   ? `<div class="stat"><span class="dot" style="background:#F5A3AE"></span>${reds} Red</div>`   : '',
+            whites ? `<div class="stat"><span class="dot" style="background:#EBD9A0"></span>${whites} White</div>` : '',
+            others ? `<div class="stat"><span class="dot" style="background:#D8BD9E"></span>${others} Other</div>` : ''
+        ].filter(Boolean).join('');
+    }
+
+    // ── Back to landing ───────────────────────────────
+    backBtn.addEventListener('click', () => {
+        lockerEl.style.display = 'none';
+        landing.style.display  = '';
+        currentWines = [];
+        minput.value = '';
+        matchesList.style.display = 'none';
+        clearError();
+        minput.focus();
+    });
+
+    // ── Toolbar controls ──────────────────────────────
+    sEl.addEventListener('input', () => {
+        state.search = sEl.value;
+        sw.classList.toggle('has-val', !!sEl.value);
+        render();
+    });
+    sc.addEventListener('click', () => {
+        sEl.value = ''; state.search = '';
+        sw.classList.remove('has-val');
+        sEl.focus();
+        render();
+    });
+    seg.addEventListener('click', e => {
+        const b = e.target.closest('button');
+        if (!b) return;
+        seg.querySelectorAll('button').forEach(x => x.classList.toggle('active', x === b));
+        state.type = b.dataset.type;
+        render();
+    });
+    viewBtns.forEach(b => b.addEventListener('click', () => {
+        state.view = b.dataset.view;
+        viewBtns.forEach(x => x.classList.toggle('active', x === b));
+        render();
+    }));
+
+    function resetFilters() {
+        state.search    = '';
+        state.type      = 'All';
+        state.collapsed = new Set();
+        sEl.value       = '';
+        sw.classList.remove('has-val');
+        seg.querySelectorAll('button').forEach(x => x.classList.toggle('active', x.dataset.type === 'All'));
+        viewBtns.forEach(x => x.classList.toggle('active', x.dataset.view === 'list'));
+        state.view = 'list';
+    }
+
+    function filterWines(ws) {
+        const s = state.search.trim().toLowerCase();
+        return ws.filter(w => {
+            if (state.type !== 'All' && w.type !== state.type) return false;
+            if (s) {
+                const hay = (w.name + ' ' + w.varietal + ' ' + (w.year || '')).toLowerCase();
+                if (!hay.includes(s)) return false;
+            }
+            return true;
+        });
+    }
+
+    // ── Render locker content ─────────────────────────
+    function render() {
+        if (!currentWines.length) return;
+
+        const f   = [...filterWines(currentWines)].sort((a,b) => a.name.localeCompare(b.name));
+        const t   = f.reduce((s,w) => s + w.bottles, 0);
+        const any = state.search || state.type !== 'All';
+
+        metaEl.innerHTML = `<span><strong>${t}</strong> bottle${t===1?'':'s'} · ${f.length} label${f.length===1?'':'s'}</span>`
+            + (any ? `<button class="clear-all" id="ca">Clear filters</button>` : '');
+
+        const ca = document.getElementById('ca');
+        if (ca) ca.addEventListener('click', () => {
+            state.search = ''; state.type = 'All';
+            sEl.value = ''; sw.classList.remove('has-val');
+            seg.querySelectorAll('button').forEach(x => x.classList.toggle('active', x.dataset.type === 'All'));
+            render();
+        });
+
+        if (!f.length) {
+            contentEl.innerHTML = `<div class="empty">
+                <i class="fas fa-wine-glass"></i>
+                <h3>No wines match</h3>
+                <p>Try clearing your search or filter.</p>
+            </div>`;
+            return;
+        }
+
+        const order = state.type === 'All' ? ['Red','White','Other'] : [state.type];
+        contentEl.innerHTML = order.map(cat => {
+            const ws = f.filter(w => w.type === cat);
+            if (!ws.length) return '';
+            const bt  = ws.reduce((s,w) => s + w.bottles, 0);
+            const cls = state.collapsed.has(cat) ? 'section collapsed' : 'section';
+            const label = cat === 'Other' ? 'Sparkling &amp; Other' : cat + ' Wines';
+
+            const body = state.view === 'grid'
+                ? `<div class="grid">${ws.map(w => `
+                    <div class="card" data-type="${cat}">
+                        <div class="btls">${w.bottles}</div>
+                        <div class="name">${esc(w.name)}</div>
+                        <div class="sub">
+                            <em>${esc(w.varietal)}</em>
+                            ${w.year ? `<span class="yr">${w.year}</span>` : ''}
+                        </div>
+                    </div>`).join('')}</div>`
+                : ws.map(w => `
+                    <div class="item">
+                        <div>
+                            <div class="name">${esc(w.name)}</div>
+                            <div class="sub">
+                                <em>${esc(w.varietal)}</em>${w.year ? ` · <span class="yr">${w.year}</span>` : ''}
+                            </div>
+                        </div>
+                        <div class="btls">${w.bottles}<small>${w.bottles===1?'bottle':'bottles'}</small></div>
+                    </div>`).join('');
+
+            return `<div class="${cls}" data-cat="${cat}">
+                <div class="cat-hdr" data-toggle="${cat}">
+                    <div class="cat-title" data-cat="${cat}">
+                        <span class="dot"></span>${label}
+                        <em>– ${bt} total</em>
+                    </div>
+                    <div class="cat-meta">${ws.length} label${ws.length===1?'':'s'} <i class="fas fa-chevron-down chev"></i></div>
+                </div>
+                <div class="items">${body}</div>
+            </div>`;
+        }).join('');
+
+        contentEl.querySelectorAll('[data-toggle]').forEach(h => {
+            h.addEventListener('click', () => {
+                const cat = h.dataset.toggle;
+                if (state.collapsed.has(cat)) state.collapsed.delete(cat);
+                else state.collapsed.add(cat);
+                h.closest('.section').classList.toggle('collapsed');
+            });
+        });
+    }
+
+    function esc(s) {
+        return String(s || '').replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+    }
+
+    // Close matches on outside click
+    document.addEventListener('click', e => {
+        if (!mform.contains(e.target)) {
+            matchesList.style.display = 'none';
+        }
+    });
+
+    // Escape key: close locker → back to landing
+    document.addEventListener('keydown', e => {
+        if (e.key === 'Escape' && lockerEl.style.display !== 'none') {
+            backBtn.click();
+        }
+    });
+});
+</script>
 </body>
 </html>

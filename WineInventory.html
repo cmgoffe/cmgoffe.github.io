@@ -576,9 +576,10 @@
         <div class="landing-card">
             <div class="landing-icon"><i class="fas fa-wine-glass-alt"></i></div>
             <h1>Wine Society Lockers</h1>
-            <p class="sub">Search by your name to view your locker inventory</p>
+            <p class="sub">Enter your member number to view your locker inventory</p>
             <form id="mform" autocomplete="off">
-                <input type="text" id="minput" placeholder="Enter your name..."
+                <input type="text" id="minput" placeholder="First 3 digits only"
+                       inputmode="numeric" pattern="[0-9]*" maxlength="3"
                        autocorrect="off" autocapitalize="off" spellcheck="false">
                 <div id="matches-list"></div>
                 <button type="submit" id="mbtn">
@@ -742,73 +743,23 @@ document.addEventListener('DOMContentLoaded', function () {
     // ── Landing form ──────────────────────────────────
     minput.addEventListener('input', () => {
         clearError();
-        const q = minput.value.trim().toLowerCase();
-        if (!q || wineData.length === 0) {
-            matchesList.style.display = 'none';
-            matchesList.innerHTML = '';
-            return;
+        matchesList.style.display = 'none';
+        matchesList.innerHTML = '';
+        const q = minput.value.trim();
+        if (q.length === 3 && wineData.length > 0) {
+            const member = wineData.find(m => (m['Mem_x0023_'] || '').substring(0, 3) === q);
+            if (member) openLocker(member);
+            else showError('Member number not found. Please try again.');
         }
-        const matches = wineData.filter(m =>
-            (m['Sheet Name'] || '').toLowerCase().includes(q)
-        );
-        if (matches.length === 0 || (matches.length === 1 && matches[0]['Sheet Name'].toLowerCase() === q)) {
-            matchesList.style.display = 'none';
-            matchesList.innerHTML = '';
-            return;
-        }
-        matchesList.innerHTML = matches.slice(0, 8).map(m => {
-            const name = esc(m['Sheet Name'] || 'Unknown');
-            return `<div class="match-item" data-name="${name}">
-                <span class="match-name">${name}</span>
-                <span class="match-bottles"><i class="fas fa-wine-bottle" style="font-size:10px;opacity:0.5;margin-right:3px;"></i>View locker</span>
-            </div>`;
-        }).join('');
-        matchesList.style.display = 'block';
-
-        matchesList.querySelectorAll('.match-item').forEach(el => {
-            el.addEventListener('click', () => {
-                const name = el.dataset.name;
-                minput.value = name;
-                matchesList.style.display = 'none';
-                matchesList.innerHTML = '';
-                const member = wineData.find(m => (m['Sheet Name'] || '') === name);
-                if (member) openLocker(member);
-            });
-        });
     });
 
     mform.addEventListener('submit', e => {
         e.preventDefault();
-        matchesList.style.display = 'none';
-        const q = minput.value.trim().toLowerCase();
-        if (!q) { showError('Please enter your name.'); return; }
-        const matches = wineData.filter(m =>
-            (m['Sheet Name'] || '').toLowerCase().includes(q)
-        );
-        if (!matches.length) { showError('No member found. Please check the spelling.'); return; }
-        if (matches.length === 1) {
-            openLocker(matches[0]);
-        } else {
-            // Show picker inline if multiple match
-            matchesList.innerHTML = '<div style="padding:8px 12px;font-size:12px;color:var(--ink-soft);font-weight:600;border-bottom:1px solid var(--line-soft);">Multiple members found — select yours:</div>'
-                + matches.slice(0, 10).map(m => {
-                    const name = esc(m['Sheet Name'] || 'Unknown');
-                    return `<div class="match-item" data-name="${name}">
-                        <span class="match-name">${name}</span>
-                        <span class="match-bottles">View locker</span>
-                    </div>`;
-                }).join('');
-            matchesList.style.display = 'block';
-            matchesList.querySelectorAll('.match-item').forEach(el => {
-                el.addEventListener('click', () => {
-                    const name = el.dataset.name;
-                    minput.value = name;
-                    matchesList.style.display = 'none';
-                    const member = wineData.find(m => (m['Sheet Name'] || '') === name);
-                    if (member) openLocker(member);
-                });
-            });
-        }
+        const q = minput.value.trim();
+        if (!q) { showError('Please enter your member number.'); return; }
+        const member = wineData.find(m => (m['Mem_x0023_'] || '').substring(0, 3) === q);
+        if (!member) { showError('Member number not found. Please try again.'); return; }
+        openLocker(member);
     });
 
     function showError(msg) {

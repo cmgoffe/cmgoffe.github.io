@@ -15,151 +15,199 @@
             --accent-color: #D4AF37;
             --card-border: #eeeeee;
         }
-        
+
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
         }
-        
+
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background-color: var(--secondary-color);
             color: var(--text-color);
             line-height: 1.6;
         }
-        
+
         .container {
             max-width: 1200px;
             margin: 0 auto;
             padding: 20px;
         }
-        
-        header {
-            text-align: center;
-            margin-bottom: 30px;
-            padding: 20px 0;
-            border-bottom: 2px solid var(--primary-color);
+
+        /* ── Landing screen ─────────────────────────────── */
+        #landing-screen {
+            min-height: calc(100vh - 40px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
-        
-        h1 {
-            color: var(--primary-color);
-            font-size: 2.5rem;
-            margin-bottom: 10px;
-        }
-        
-        .subtitle {
-            font-size: 1.2rem;
-            color: #666;
-        }
-        
-        .search-container {
-            margin-bottom: 30px;
-            position: relative;
-            max-width: 600px;
-            margin-left: auto;
-            margin-right: auto;
-        }
-        
-        #search {
+
+        .landing-card {
+            background: white;
+            border-radius: 12px;
+            padding: 48px 40px;
+            max-width: 440px;
             width: 100%;
-            padding: 12px 20px;
-            font-size: 16px;
-            border: 1px solid var(--card-border);
-            border-radius: 30px;
-            background-color: var(--card-bg);
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-        }
-        
-        .search-icon {
-            position: absolute;
-            right: 15px;
-            top: 12px;
-            color: #888;
-        }
-        
-        .directory {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 25px;
-        }
-        
-        .collector-card {
-            background: var(--card-bg);
-            border-radius: 8px;
-            overflow: hidden;
-            border: 1px solid var(--card-border);
-            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-            cursor: pointer;
-        }
-        
-        .collector-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 20px rgba(0,0,0,0.15);
-        }
-        
-        .card-header {
-            background: linear-gradient(135deg, var(--primary-color) 0%, var(--hover-color) 100%);
-            color: white;
-            padding: 15px 20px;
-        }
-        
-        .sheet-name {
-            font-size: 1.3rem;
-            font-weight: bold;
-        }
-        
-        .card-body {
-            padding: 20px;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.12);
+            border-bottom: 3px solid var(--accent-color);
             text-align: center;
+            animation: fadeSlideUp 0.5s ease both;
         }
-        
-        .bottle-count {
-            font-size: 2rem;
-            font-weight: bold;
+
+        .landing-icon {
+            font-size: 3rem;
+            color: var(--accent-color);
+            margin-bottom: 20px;
+        }
+
+        .landing-card h1 {
             color: var(--primary-color);
-            margin: 10px 0;
+            font-size: 2rem;
+            margin-bottom: 8px;
         }
-        
-        .bottle-label {
+
+        .landing-card .subtitle {
             font-size: 1rem;
             color: #666;
+            margin-bottom: 32px;
         }
-        
-        .wine-icon {
-            font-size: 1.5rem;
-            margin-right: 10px;
-            color: var(--primary-color);
+
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
         }
-        
-        .card-footer {
-            padding: 15px;
+
+        #member-input {
+            width: 100%;
+            padding: 14px 18px;
+            font-size: 20px;
             text-align: center;
-            background-color: #f9f9f9;
-            border-top: 1px solid #eee;
+            border: 2px solid var(--card-border);
+            border-radius: 8px;
+            background: var(--card-bg);
+            transition: border-color 0.2s ease, box-shadow 0.2s ease;
+            letter-spacing: 0.12em;
         }
-        
-        .view-link {
-            color: var(--primary-color);
-            text-decoration: none;
-            font-weight: bold;
-            transition: color 0.3s ease;
+
+        #member-input:focus {
+            outline: none;
+            border-color: var(--accent-color);
+            box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.2);
+        }
+
+        #lookup-btn {
+            width: 100%;
+            padding: 14px;
+            font-size: 16px;
+            font-weight: 600;
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--hover-color) 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
             cursor: pointer;
-            margin: 0 8px;
+            transition: opacity 0.2s ease, transform 0.1s ease;
+            letter-spacing: 0.02em;
+            font-family: inherit;
         }
-        
-        .view-link:hover {
-            color: var(--hover-color);
+
+        #lookup-btn:hover { opacity: 0.9; }
+        #lookup-btn:active { transform: scale(0.98); }
+        #lookup-btn:disabled { opacity: 0.7; cursor: not-allowed; }
+
+        .lookup-error {
+            color: #d32f2f;
+            background: #ffebee;
+            border-radius: 6px;
+            padding: 10px 14px;
+            font-size: 14px;
+            animation: shake 0.4s ease;
         }
-        
+
+        @keyframes fadeSlideUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            20%       { transform: translateX(-6px); }
+            40%       { transform: translateX(6px); }
+            60%       { transform: translateX(-4px); }
+            80%       { transform: translateX(4px); }
+        }
+
+        /* ── Locker view ────────────────────────────────── */
+        #locker-view {
+            animation: fadeSlideUp 0.35s ease both;
+        }
+
+        .locker-header {
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--hover-color) 100%);
+            color: white;
+            padding: 20px 24px;
+            border-radius: 8px;
+            margin-bottom: 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 16px;
+        }
+
+        .locker-header-info h2 {
+            font-size: 1.6rem;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .locker-stat-chips {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .stat-chip {
+            background: rgba(255,255,255,0.15);
+            border: 1px solid rgba(255,255,255,0.3);
+            border-radius: 20px;
+            padding: 4px 12px;
+            font-size: 13px;
+            font-weight: 500;
+        }
+
+        .stat-chip.total {
+            background: rgba(212, 175, 55, 0.35);
+            border-color: rgba(212, 175, 55, 0.65);
+            font-weight: 700;
+        }
+
+        .back-btn {
+            background: rgba(255,255,255,0.15);
+            border: 1px solid rgba(255,255,255,0.4);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            white-space: nowrap;
+            transition: background 0.2s ease;
+            flex-shrink: 0;
+            font-family: inherit;
+        }
+
+        .back-btn:hover { background: rgba(255,255,255,0.28); }
+
+        /* ── Loading / error ────────────────────────────── */
         .loading {
             text-align: center;
             padding: 40px;
             font-size: 18px;
             color: #666;
         }
-        
+
         .loader {
             border: 5px solid #f3f3f3;
             border-top: 5px solid var(--primary-color);
@@ -169,115 +217,25 @@
             animation: spin 1s linear infinite;
             margin: 20px auto;
         }
-        
+
         @keyframes spin {
-            0% { transform: rotate(0deg); }
+            0%   { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
         }
-        
-        .error {
-            text-align: center;
-            padding: 20px;
-            color: #d32f2f;
-            background-color: #ffebee;
-            border-radius: 8px;
-            margin: 20px 0;
-        }
-        
-        .no-results {
-            text-align: center;
-            padding: 30px;
-            grid-column: 1 / -1;
-            color: #666;
-        }
-        
-        .updated-time {
-            text-align: center;
-            margin-top: 40px;
-            color: #666;
-            font-size: 0.9rem;
-        }
-        
-        /* Detail view modal styles */
-        #detail-modal {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background-color: rgba(0,0,0,0.8);
-            z-index: 1000;
-            display: none;
-            justify-content: center;
-            align-items: center;
-            padding: 20px;
-        }
-        
-        .modal-content {
-            background-color: white;
-            border-radius: 8px;
-            width: 90%;
-            max-width: 1000px;
-            max-height: 90vh;
-            overflow-y: auto;
-            position: relative;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.5);
-        }
-        
-        .modal-header {
-            background: linear-gradient(135deg, var(--primary-color) 0%, var(--hover-color) 100%);
-            color: white;
-            padding: 15px 20px;
-            position: sticky;
-            top: 0;
-            z-index: 100;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        
-        .modal-title {
-            font-size: 1.5rem;
-            margin: 0;
-            display: flex;
-            align-items: center;
-        }
-        
-        .modal-close {
-            background: none;
-            border: none;
-            color: white;
-            font-size: 1.5rem;
-            cursor: pointer;
-        }
-        
-        .modal-body {
-            padding: 10px;
-        }
-        .stat-title {
-            font-size: 0.9rem;
-            color: #666;
-        }
-        
-        .stat-number {
-            font-size: 1.6rem;
-            font-weight: bold;
-            color: var(--primary-color);
-            margin: 5px 0;
-        }
+
+        /* ── Inventory tables ───────────────────────────── */
         .wine-table-container,
         .inventory-table-container {
-            width: 100%
+            width: 100%;
             overflow-x: auto;
-            border-style: border-box;
         }
-        
+
         .inventory-table {
             width: 100%;
             border-collapse: collapse;
             margin-top: 20px;
         }
-        
+
         .inventory-table th {
             background-color: #f5f5f5;
             color: var(--primary-color);
@@ -285,141 +243,155 @@
             text-align: left;
             padding: 12px 15px;
             border-bottom: 2px solid #ddd;
-           /* position: sticky;*/
-            top: 65px;
         }
-        
+
         .inventory-table td {
-            padding: 10px 15px;
+            padding: 13px 15px;
             border-bottom: 1px solid #eee;
         }
-        
-        .inventory-table tr:hover {
-            background-color: #f9f9f9;
-        }
-        
+
+        .inventory-table tr:hover { background-color: #f9f9f9; }
+
         .wine-year {
             font-weight: bold;
             color: var(--accent-color);
         }
-        
-        .wine-type {
-            text-transform: capitalize;
-        }
-        
+
+        .wine-type { text-transform: capitalize; }
+
         .wine-region {
             color: #666;
             font-style: italic;
         }
-        
+
         .empty-inventory {
             text-align: center;
-            padding: 30px;
+            padding: 40px;
             color: #666;
         }
+
         .wine-category-header {
             background-color: #f8f0f1;
-            color: #722F37;
-            padding: 6px 10px;
+            color: var(--primary-color);
+            padding: 9px 14px;
             display: block;
             border-bottom: 1px solid #ddd;
-            margin-top: 3px;
-            border-radius: 4px 4px 0 0;
+            border-left: 4px solid var(--primary-color);
+            margin-top: 8px;
+            border-radius: 0 4px 0 0;
             min-height: 28px;
+            font-weight: 600;
         }
-        .wine-group-header {
-            background-color: #f0f0f0;
-            padding: 10px 15px;
-            font-weight: bold;
-            border-bottom: 1px solid #ddd;
-            color: #722F37;
-            margin-top: 15px;
-        }
-        .category-row {
-          padding: 5px 0;
-          background-color: #f8f0f1; /* Light background */
-        }
-        /* Add fixed column widths to ensure alignment */
+
+        /* Fixed column widths */
         .inventory-table th:nth-child(1),
-        .wine-category-table td:nth-child(1) {
-            width: 40%;
-        }
-        
+        .wine-category-table td:nth-child(1) { width: 40%; }
+
         .inventory-table th:nth-child(2),
-        .wine-category-table td:nth-child(2) {
-            width: 30%;
-        }
-        
+        .wine-category-table td:nth-child(2) { width: 30%; }
+
         .inventory-table th:nth-child(3),
-        .wine-category-table td:nth-child(3) {
-            width: 15%;
-        }
-        
+        .wine-category-table td:nth-child(3) { width: 15%; }
+
         .inventory-table th:nth-child(4),
         .wine-category-table td:nth-child(4) {
             width: 15%;
             text-align: center;
             padding-left: 20px;
         }
-        .wine-category-label {
-          color: #722F37;
-          font-weight: bold;
-          font-size: 12px;
-          line-height: 1.0;
-          padding-left: 10px;
+
+        .inventory-table.main-headers-only { margin-bottom: 15px; }
+
+        .wine-category-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
         }
-/* Enhanced typography and visual hierarchy for wine cards */
+
+        .wine-category-table td {
+            padding: 13px 15px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .wine-category-table tr:hover { background-color: #f9f9f9; }
+
+        .fallback-message {
+            text-align: center;
+            padding: 30px;
+            background-color: #f9f9f9;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+
+        .error-details {
+            margin-top: 10px;
+            font-size: 14px;
+            color: #666;
+        }
+
+        /* ── Mobile ─────────────────────────────────────── */
         @media (max-width: 768px) {
+            .landing-card {
+                padding: 36px 24px;
+            }
+
+            .locker-header {
+                flex-direction: column-reverse;
+                gap: 12px;
+            }
+
+            .back-btn {
+                align-self: flex-start;
+            }
+
             .wine-card {
                 background: white;
                 border-radius: 6px;
                 box-shadow: 0 2px 4px rgba(0,0,0,0.1);
                 padding: 14px 16px;
-                border-left: 4px solid #722F37;
+                border-left: 4px solid var(--primary-color);
                 margin-bottom: 12px;
                 position: relative;
                 transition: transform 0.2s ease;
             }
-            
-            .wine-card:active {
-                transform: scale(0.98);
-            }
+
+            .wine-card:active { transform: scale(0.98); }
+
             .wine-card-title {
                 font-size: 16px;
                 font-weight: 600;
-                color: #333333;
+                color: #333;
                 margin-bottom: 8px;
                 line-height: 1.3;
                 letter-spacing: 0.01em;
             }
+
             .wine-card-details {
                 display: flex;
                 justify-content: space-between;
                 align-items: center;
             }
+
             .wine-card-info {
                 font-size: 14px;
-                color: #666666;
+                color: #666;
                 word-break: break-word;
                 flex: 1;
             }
-            .wine-year {
-                font-weight: 500;
-                color: #8B3A44;
-            }
-            .wine-varietal {
-                font-style: italic;
-            }
+
+            .wine-varietal { font-style: italic; }
+
             .wine-card-count {
                 font-weight: 600;
                 font-size: 15px;
-                color: #722F37;
+                color: var(--primary-color);
                 background-color: #f8f0f1;
                 padding: 4px 10px;
                 border-radius: 12px;
                 margin-left: 10px;
                 white-space: nowrap;
             }
+
             .wine-category-header {
                 background: linear-gradient(to right, #722F37, #8B3A44);
                 color: white;
@@ -427,6 +399,7 @@
                 font-size: 17px;
                 font-weight: 600;
                 border-radius: 6px 6px 0 0;
+                border-left: none;
                 margin-top: 8px;
                 margin-bottom: 30px;
                 display: flex;
@@ -437,24 +410,21 @@
                 z-index: 10;
                 box-shadow: 0 2px 4px rgba(0,0,0,0.15);
             }
-            
+
             .wine-category-count {
                 font-size: 14px;
                 font-weight: normal;
                 opacity: 0.9;
             }
-            
-            /* Improve the stats area */
+
             .inventory-stats {
                 display: grid;
                 grid-template-columns: repeat(auto-fit, minmax(65px, 1fr));
                 gap: 2px;
-                margin: 0 0 0px 0;
                 background-color: #f9f9f9;
                 border-radius: 8px;
-                padding: 0px;
             }
-            
+
             .inventory-stat {
                 text-align: center;
                 background-color: white;
@@ -462,20 +432,19 @@
                 padding: 10px 6px;
                 box-shadow: 0 1px 2px rgba(0,0,0,0.05);
             }
-            
+
             .stat-title {
                 font-size: 12px;
-                color: #666666;
+                color: #666;
                 margin-bottom: 4px;
             }
-            
+
             .stat-number {
                 font-size: 18px;
                 font-weight: 600;
-                color: #722F37;
+                color: var(--primary-color);
             }
-            
-            /* Empty category message */
+
             .empty-category {
                 text-align: center;
                 padding: 20px;
@@ -483,699 +452,318 @@
                 font-style: italic;
             }
         }
-        .inventory-table.main-headers-only {
-            margin-bottom: 15px;
-        }
-        
-        .wine-category-table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-bottom: 20px;
-        }
-        
-        .wine-category-table td {
-            padding: 10px 15px;
-            border-bottom: 1px solid #eee;
-        }
-        
-        .wine-category-table tr:hover {
-            background-color: #f9f9f9;
-        }
-        
-        /* Fallback message */
-        .fallback-message {
-            text-align: center;
-            padding: 30px;
-            background-color: #f9f9f9;
-            border-radius: 8px;
-            margin: 20px 0;
-        }
-        
-        .error-details {
-            margin-top: 10px;
-            font-size: 14px;
-            color: #666;
-        }
     </style>
 </head>
 <body>
     <div class="container">
-        <header>
-            <h1>Wine Locker Directory</h1>
-            <p class="subtitle">Browse all wine lockers below</p>
-        </header>
-        
-        <div class="search-container">
-            <input type="text" id="search" placeholder="Search by name...">
-            <i class="fas fa-search search-icon"></i>
-        </div>
-        
-        <div id="loading" class="loading">
-            <div class="loader"></div>
-            <p>Loading wine inventory data...</p>
-        </div>
-        
-        <div id="error" class="error" style="display: none;"></div>
-        
-        <div id="directory" class="directory"></div>
-        
-        <div class="updated-time" id="updated-time"></div>
-    </div>
-    
-    <!-- Detail Modal -->
-    <div id="detail-modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h2 class="modal-title"><i class="fas fa-wine-bottle wine-icon"></i> <span id="modal-collector-name"></span></h2>
-                <button class="modal-close"><i class="fas fa-times"></i></button>
-            </div>
-            <div class="modal-body">
-                <div class="inventory-stats" id="inventory-stats">
+
+        <!-- Landing Screen -->
+        <div id="landing-screen">
+            <div class="landing-card">
+                <div class="landing-icon">
+                    <i class="fas fa-wine-glass-alt"></i>
                 </div>
-                
-                <div id="inventory-content">
-                </div>
+                <h1>Wine Society Lockers</h1>
+                <p class="subtitle">Enter your member number to view your locker inventory</p>
+                <form class="input-group" id="lookup-form" autocomplete="off">
+                    <input
+                        type="text"
+                        id="member-input"
+                        inputmode="numeric"
+                        maxlength="4"
+                        placeholder="e.g. 609"
+                        autocomplete="off"
+                        autocorrect="off"
+                        autocapitalize="off"
+                        spellcheck="false"
+                    >
+                    <button type="submit" id="lookup-btn">
+                        View My Locker &nbsp;<i class="fas fa-arrow-right"></i>
+                    </button>
+                    <div id="lookup-error" class="lookup-error" style="display:none"></div>
+                </form>
             </div>
         </div>
+
+        <!-- Locker View -->
+        <div id="locker-view" style="display:none">
+            <div class="locker-header">
+                <div class="locker-header-info">
+                    <h2><i class="fas fa-wine-bottle"></i> <span id="locker-name"></span></h2>
+                    <div class="locker-stat-chips" id="locker-stat-chips"></div>
+                </div>
+                <button class="back-btn" id="back-btn">
+                    <i class="fas fa-arrow-left"></i> Back
+                </button>
+            </div>
+            <div id="locker-content"></div>
+        </div>
+
     </div>
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            const directoryEl = document.getElementById('directory');
-            const loadingEl = document.getElementById('loading');
-            const errorEl = document.getElementById('error');
-            const searchEl = document.getElementById('search');
-            const updatedTimeEl = document.getElementById('updated-time');
-            
-            // Modal elements
-            const detailModal = document.getElementById('detail-modal');
-            const modalCollectorName = document.getElementById('modal-collector-name');
-            const inventoryStats = document.getElementById('inventory-stats');
-            const inventoryContent = document.getElementById('inventory-content');
-            const modalClose = document.querySelector('.modal-close');
-            
-            // For this example, we'll use Table_Directory.json as the main directory data
-            const directoryUrl = 'Table_Directory.json';
-            
-            let wineData = [];
-            let totalBottlesCount = 0;
-            let jsonFilesBottleCount = {}; // Store bottle counts from individual JSON files
+            const landingScreen = document.getElementById('landing-screen');
+            const lockerView    = document.getElementById('locker-view');
+            const lookupForm    = document.getElementById('lookup-form');
+            const memberInput   = document.getElementById('member-input');
+            const lookupBtn     = document.getElementById('lookup-btn');
+            const lookupError   = document.getElementById('lookup-error');
+            const lockerNameEl  = document.getElementById('locker-name');
+            const lockerChips   = document.getElementById('locker-stat-chips');
+            const lockerContent = document.getElementById('locker-content');
+            const backBtn       = document.getElementById('back-btn');
+
+            let directoryData  = [];
             let varietalTypeMap = {};
 
+            // ── Boot: only two requests on load ───────────────────────────
+            Promise.all([
+                fetch('winevarietals.json').then(r => r.ok ? r.json() : null),
+                fetch('Table_Directory.json').then(r => {
+                    if (!r.ok) throw new Error('Could not load directory data.');
+                    return r.json();
+                })
+            ])
+            .then(([varietals, directory]) => {
+                const list = (varietals && (varietals.value || varietals)) || [];
+                list.forEach(item => {
+                    if (item.Varietal) {
+                        varietalTypeMap[item.Varietal.toLowerCase()] = item.Type || 'Other';
+                    }
+                });
+                directoryData = directory.value || directory || [];
+                memberInput.focus();
+            })
+            .catch(err => {
+                showError('Initialisation failed: ' + err.message);
+                lookupBtn.disabled = true;
+            });
 
-            function loadVarietalMapping() {
-                return fetch('winevarietals.json')
-                    .then(response => {
-                        if (!response.ok) {
-                            console.warn('Could not load varietal mapping data.');
-                            return null;
-                        }
-                        return response.json();
-                    })
-                    .then(data => {
-                        if (!data) return;
+            // ── Member number lookup ───────────────────────────────────────
+            lookupForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                const num = memberInput.value.trim();
+                if (!num) {
+                    showError('Please enter your member number.');
+                    return;
+                }
+                const member = directoryData.find(m => (m['Mem_x0023_'] || '').trim() === num);
+                if (!member) {
+                    showError('Member number not found. Please try again.');
+                    return;
+                }
+                clearError();
+                loadLocker(member);
+            });
 
-                        const varietalsList = data.value || data;
-                
-                        varietalsList.forEach(item => {
-                            if (item.Varietal) {
-                                varietalTypeMap[item.Varietal.toLowerCase()] = item.Type || 'Other';
-                            }
-                        });
-                
-                        console.log('Loaded varietal mappings:', Object.keys(varietalTypeMap).length);
-                    })
-                    .catch(error => {
-                        console.error('Error loading varietal data:', error);
-                    });
-            }
-    
-            function getWineType(varietal) {
-        // If we have a varietal, try to look it up in our mapping
-                if (varietal && varietal.trim() !== '' && varietal !== 'N/A') {
-                    const type = varietalTypeMap[varietal.toLowerCase()];
-                    if (type) {
-                        return type;
-                    }
-                }
-        
-        // If not found, return "Other" as default
-                return 'Other';
-            }
-            
-            // Function to calculate inventory statistics
-            function calculateInventoryStats(wines) {
-                let totalBottles = 0;
-                let redWines = 0;
-                let whiteWines = 0;
-                let otherWines = 0;
-    
-                wines.forEach(wine => {
-                    const bottles = Number(wine.bottles) || 0;
-                    totalBottles += bottles;
-        
-        // Use our classification function
-                    const wineType = wine.type;
-        
-                    if (wineType === 'Red') {
-                        redWines += bottles;
-                    } else if (wineType === 'White') {
-                        whiteWines += bottles;
-                    } else {
-                        otherWines += bottles;
-                    }
-                });
-    
-                return {
-                    totalBottles,
-                    redWines,
-                    whiteWines,
-                    otherWines
-                };
-            }
-// First load the varietal mapping, then proceed with the rest
-            loadVarietalMapping()
-                .then(() => {
-                    console.log('Varietal mapping loaded, proceeding with directory data');
-                    return fetch(directoryUrl);
-                })
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error('Failed to load directory data. Please ensure Table_Directory.json exists.');
-                    }
-                    return response.json();
-                })
-                .then(data => {
-                    console.log('Directory data loaded successfully:', data);
-                    
-                    // Handle different data formats
-                    if (data.value && Array.isArray(data.value)) {
-                        wineData = data.value;
-                    } else if (Array.isArray(data)) {
-                        wineData = data;
-                    } else {
-                        try {
-                            // Try to convert to array if it's an object
-                            wineData = Object.values(data);
-                            console.log('Converted data to array:', wineData.slice(0, 3));
-                        } catch (e) {
-                            console.error('Could not convert data to array:', e);
-                            wineData = [];
-                        }
-                    }
-                    
-                    // Start loading all individual JSON files
-                    return loadAllBottleCounts(wineData);
-                })
-                .then(() => {
-                    loadingEl.style.display = 'none';
-                    
-                    // Check if data is an array
-                    if (!Array.isArray(wineData)) {
-                        console.error('Wine data is not an array:', wineData);
-                        throw new Error('Data format error: Expected an array of wine lockers');
-                    }
-                    
-                    if (wineData.length === 0) {
-                        throw new Error('No wine inventory data found in the directory.');
-                    }
-                    
-                    console.log(`Loaded ${wineData.length} collector entries.`);
-                    
-                    // Sort the data alphabetically by last name
-                    wineData.sort((a, b) => {
-                        const nameA = a["Sheet Name"] || "";
-                        const nameB = b["Sheet Name"] || "";
-                        
-                        // Function to extract last name
-                        const getLastName = (name) => {
-                            // For format like "J. Smith" or "John Smith"
-                            const parts = name.split(' ');
-                            if (parts.length > 1) {
-                                return parts[parts.length - 1]; // Get the last part as last name
-                            }
-                            return name; // If only one part, use the whole name
-                        };
-                        
-                        const lastNameA = getLastName(nameA);
-                        const lastNameB = getLastName(nameB);
-                        
-                        return lastNameA.localeCompare(lastNameB);
-                    });
-                    
-                    // Render directory
-                    renderDirectory(wineData);
-                    
-                    // Set updated time
-                    const now = new Date();
-                    updatedTimeEl.textContent = `Last updated: ${now.toLocaleString()}`;
-                })
-                .catch(error => {
-                    loadingEl.style.display = 'none';
-                    errorEl.style.display = 'block';
-                    errorEl.innerHTML = `
-                        <p>Error: ${error.message}</p>
-                        <p style="font-size: 0.9em; margin-top: 10px;">
-                            Check browser console for more details.
-                        </p>
-                    `;
-                    console.error('Error loading data:', error);
-                });
-            
-            // Load all JSON files to get total bottle counts
-            function loadAllBottleCounts(data) {
-                if (!Array.isArray(data)) {
-                    console.error('Cannot load bottle counts: data is not an array');
-                    return Promise.resolve(); // Return a resolved promise to continue the chain
-                }
-                
-                const promises = [];
-                
-                data.forEach(locker => {
-                    const collectorName = locker["Sheet Name"] || "Unknown";
-                    const formattedName = collectorName.replace(/\s+/g, '_');
-                    const lockerDataUrl = `Table_${formattedName}.json`;
-                    
-                    const promise = fetch(lockerDataUrl)
-                        .then(response => {
-                            if (!response.ok) {
-                                console.warn(`Could not load data file for ${collectorName}, using directory count`);
-                                // Use the count from the directory as a fallback
-                                const bottleCount = locker["_x0023_ bottles"] || 
-                                                 locker["# bottles"] || 
-                                                 locker["Bottles"] || 
-                                                 0;
-                                jsonFilesBottleCount[collectorName] = Number(bottleCount) || 0;
-                                return null;
-                            }
-                            return response.json();
-                        })
-                        .then(jsonData => {
-                            // Calculate total bottles directly from the JSON data
-                            if (jsonData && Array.isArray(jsonData)) {
-                                let bottlesCount = 0;
-                                jsonData.forEach(item => {
-                                    bottlesCount += Number(item.Bottles) || 0;
-                                });
-                                jsonFilesBottleCount[collectorName] = bottlesCount;
-                                
-                                // Keep a running total
-                                totalBottlesCount += bottlesCount;
-                            }
-                        })
-                        .catch(error => {
-                            console.error(`Error loading JSON for ${collectorName}:`, error);
-                            // Use directory count as fallback
-                            const bottleCount = locker["_x0023_ bottles"] || 
-                                             locker["# bottles"] || 
-                                             locker["Bottles"] || 
-                                             0;
-                            jsonFilesBottleCount[collectorName] = Number(bottleCount) || 0;
-                        });
-                    
-                    promises.push(promise);
-                });
-                
-                return Promise.all(promises);
-            }
-            
-            // Search functionality
-            searchEl.addEventListener('input', function() {
-                const searchTerm = this.value.toLowerCase().trim();
-                
-                if (searchTerm === '') {
-                    renderDirectory(wineData);
-                    return;
-                }
-                
-                const filteredData = wineData.filter(item => {
-                    const collectorName = (item["Sheet Name"] || "").toLowerCase();
-                    return collectorName.includes(searchTerm);
-                });
-                
-                renderDirectory(filteredData);
+            // ── Back to landing ────────────────────────────────────────────
+            backBtn.addEventListener('click', function() {
+                lockerView.style.display = 'none';
+                lockerContent.innerHTML  = '';
+                lockerChips.innerHTML    = '';
+
+                landingScreen.style.display = 'flex';
+                memberInput.value = '';
+
+                // Re-trigger landing card entrance animation
+                const card = document.querySelector('.landing-card');
+                card.style.animation = 'none';
+                card.offsetHeight; // reflow
+                card.style.animation = '';
+
+                memberInput.focus();
             });
-            
-            // Close the modal when close button is clicked
-            modalClose.addEventListener('click', function() {
-                closeDetailModal();
-            });
-            
-            // Close modal when clicking outside the content
-            detailModal.addEventListener('click', function(e) {
-                if (e.target === detailModal) {
-                    closeDetailModal();
-                }
-            });
-            
-            // Calculate total bottles for a locker
-            function calculateTotalBottles(wines) {
-                let total = 0;
-                if (Array.isArray(wines)) {
-                    wines.forEach(wine => {
-                        total += Number(wine.Bottles) || 0;
-                    });
-                }
-                return total;
-            }
-            
-            // Render the directory cards
-            function renderDirectory(data) {
-                directoryEl.innerHTML = '';
-                
-                if (!Array.isArray(data)) {
-                    console.error('Cannot render directory: data is not an array');
-                    directoryEl.innerHTML = '<div class="error">Error: Invalid data format. Please check the console for details.</div>';
-                    return;
-                }
-                
-                if (data.length === 0) {
-                    directoryEl.innerHTML = '<div class="no-results">No wine lockers found matching your search.</div>';
-                    return;
-                }
-                
-                data.forEach(locker => {
-                    const card = document.createElement('div');
-                    card.className = 'collector-card';
-                    
-                    // Get the collector name from "Sheet Name" property
-                    const collectorName = locker["Sheet Name"] || "Unknown";
-                    
-                    // Get bottle count from the individually loaded JSON files
-                    const bottleCount = jsonFilesBottleCount[collectorName] || 0;
-                    
-                    card.innerHTML = `
-                        <div class="card-header">
-                            <div class="sheet-name">${collectorName}</div>
-                        </div>
-                        <div class="card-body">
-                            <i class="fas fa-wine-bottle wine-icon"></i>
-                            <div class="bottle-count">${bottleCount}</div>
-                            <div class="bottle-label">bottles</div>
-                        </div>
-                        <div class="card-footer">
-                            <a class="view-link view-detail" data-name="${collectorName}">
-                                View Details <i class="fas fa-search-plus"></i>
-                            </a>
-                        </div>
-                    `;
-                    
-                    // Add click event to show details
-                    const viewDetailBtn = card.querySelector('.view-detail');
-                    viewDetailBtn.addEventListener('click', function(e) {
-                        e.preventDefault();
-                        e.stopPropagation();
-                        const lockerName = this.getAttribute('data-name');
-                        showLockerDetails(lockerName);
-                    });
-                    
-                    // Make whole card clickable to view details
-                    card.addEventListener('click', function(e) {
-                        if (!e.target.closest('a')) {
-                            const viewBtn = card.querySelector('.view-detail');
-                            viewBtn.click();
-                        }
-                    });
-                    
-                    directoryEl.appendChild(card);
-                });
-            }
-            
-            // Show locker details
-            function showLockerDetails(lockerName) {
-                modalCollectorName.textContent = lockerName;
-                
-                // Clear previous content
-                inventoryStats.innerHTML = '';
-                inventoryContent.innerHTML = `
-                    <div class="loading">
-                        <div class="loader"></div>
-                        <p>Loading detailed inventory data...</p>
-                    </div>
-                `;
-                
-                // Show the modal
-                detailModal.style.display = 'flex';
-                document.body.style.overflow = 'hidden'; // Prevent scrolling behind modal
-                
-                // Replace all spaces with underscores for the filename
-                const formattedName = lockerName.replace(/\s+/g, '_');
-                const lockerDataUrl = `Table_${formattedName}.json`;
-                
-                console.log(`Attempting to fetch: ${lockerDataUrl} for "${lockerName}"`);
-                
-                // Fetch the wine data using the consistent naming pattern
-                fetch(lockerDataUrl)
-                    .then(response => {
-                        if (!response.ok) {
-                            console.error(`Failed to load: ${lockerDataUrl} (Status: ${response.status})`);
-                            throw new Error(`Could not load wine data for ${lockerName}`);
-                        }
-                        return response.json();
+
+            // ── Fetch and display a member's locker ────────────────────────
+            function loadLocker(member) {
+                const name     = member['Sheet Name'] || 'Unknown';
+                const filename = 'Table_' + name.replace(/\s+/g, '_') + '.json';
+
+                lockerNameEl.textContent = name;
+                lockerChips.innerHTML    = '';
+                lockerContent.innerHTML  = '<div class="loading"><div class="loader"></div><p>Loading inventory…</p></div>';
+
+                landingScreen.style.display = 'none';
+                lockerView.style.display    = 'block';
+
+                // Re-trigger locker view entrance animation
+                lockerView.style.animation = 'none';
+                lockerView.offsetHeight; // reflow
+                lockerView.style.animation = '';
+
+                fetch(filename)
+                    .then(r => {
+                        if (!r.ok) throw new Error('Could not load locker data for ' + name + '.');
+                        return r.json();
                     })
-                    .then(data => {
-                        console.log("Successfully loaded data:", data);
-                        renderLockerDetails(data, lockerName);
-                    })
-                    .catch(error => {
-                        console.error('Error loading detail data:', error);
-                        
-                        // Show error message
-                        inventoryContent.innerHTML = `
+                    .then(data => renderLockerView(data, name))
+                    .catch(err => {
+                        lockerContent.innerHTML = `
                             <div class="fallback-message">
-                                <p>Couldn't load data for ${lockerName}'s locker.</p>
-                                <p class="error-details">Error: ${error.message}</p>
-                            </div>
-                        `;
+                                <p>Couldn't load inventory for ${name}.</p>
+                                <p class="error-details">${err.message}</p>
+                            </div>`;
                     });
             }
-            // Updated renderLockerDetails function with improved typography
-            function renderLockerDetails(data, lockerName) {
-                if (!data || !Array.isArray(data) || data.length === 0) {
-                    inventoryContent.innerHTML = `
-                        <div class="empty-inventory">
-                            <p>No wine inventory data available for ${lockerName}.</p>
-                        </div>
-                    `;
+
+            // ── Render the locker inventory ────────────────────────────────
+            function renderLockerView(data, name) {
+                if (!Array.isArray(data) || data.length === 0) {
+                    lockerContent.innerHTML = '<div class="empty-inventory"><p>No inventory on file for this locker.</p></div>';
                     return;
                 }
-                
-                // Process the wines data from the Table JSON format
+
                 const wines = data
-                    .map(item => {
-                        const wineName = (item.Wine || '').trim();
-                        const varietal = (item.Varietal || '').trim();
-                        const type = getWineType(varietal);
-                        return {
-                            name: wineName,
-                            varietal: varietal || 'N/A',
-                            year: item.Year || 'N/A',
-                            bottles: Number(item.Bottles) || 0,
-                            type: type
-                        };
-                    })
-                    .filter(wine => wine.bottles > 0);
-                
-                const groupedWines = {
-                    'White': wines.filter(wine => wine.type === 'White'),
-                    'Red': wines.filter(wine => wine.type === 'Red'),
-                    'Other': wines.filter(wine => wine.type === 'Other')
-                };  
-            
-                // Sort wines alphabetically within each category
-                Object.keys(groupedWines).forEach(type => {
-                    groupedWines[type].sort((a,b) => a.name.localeCompare(b.name));
-                });
-                
-                // Calculate stats from the wines array
-                const stats = calculateInventoryStats(wines);
-                // Use card layout for mobile, table for desktop
+                    .map(item => ({
+                        name:     (item.Wine     || '').trim(),
+                        varietal: (item.Varietal || '').trim() || 'N/A',
+                        year:     (item.Year     || 'N/A'),
+                        bottles:  Number(item.Bottles) || 0,
+                        type:     getWineType((item.Varietal || '').trim())
+                    }))
+                    .filter(w => w.bottles > 0);
+
+                const grouped = {
+                    White: wines.filter(w => w.type === 'White').sort((a,b) => a.name.localeCompare(b.name)),
+                    Red:   wines.filter(w => w.type === 'Red'  ).sort((a,b) => a.name.localeCompare(b.name)),
+                    Other: wines.filter(w => w.type === 'Other').sort((a,b) => a.name.localeCompare(b.name)),
+                };
+
+                const total  = wines.reduce((s,w)  => s + w.bottles, 0);
+                const reds   = grouped.Red.reduce  ((s,w) => s + w.bottles, 0);
+                const whites = grouped.White.reduce((s,w) => s + w.bottles, 0);
+                const others = grouped.Other.reduce((s,w) => s + w.bottles, 0);
+
+                // Header stat chips
+                lockerChips.innerHTML = [
+                    `<span class="stat-chip total">${total} total</span>`,
+                    reds   ? `<span class="stat-chip">${reds} Red</span>`    : '',
+                    whites ? `<span class="stat-chip">${whites} White</span>` : '',
+                    others ? `<span class="stat-chip">${others} Other</span>` : '',
+                ].join('');
+
                 const isMobile = window.innerWidth <= 768;
-                
-                let contentHTML = '';
-                
+                let html = '';
+
                 if (isMobile) {
-                    // Enhanced card-based mobile layout with better typography
-                    contentHTML = `<div id="wine-categories-container">`;
-                    
-                    // Process each wine type
+                    // Card layout for mobile
+                    html = '<div id="wine-categories-container">';
                     ['Red', 'White', 'Other'].forEach(type => {
-                        if (groupedWines[type].length > 0) {
-                            const totalBottles = groupedWines[type].reduce((sum, wine) => sum + wine.bottles, 0);
-                            
-                            contentHTML += `
-                                <div class="wine-category-section">
-                                    <div class="wine-category-header" data-category="${type}">
-                                        ${type} Wines <span class="wine-category-count">(${totalBottles} bottles)</span>
-                                    </div>
-                                    <div class="wine-cards" data-category="${type}">
-                            `;
-                            
-                            groupedWines[type].forEach(wine => {
-                                // Format the year for display
-                                const yearDisplay = wine.year !== 'N/A' ? 
-                                    `<span class="wine-year">${wine.year}</span>` : '';
-                                
-                                // Format bottles text
-                                const bottleText = wine.bottles === 1 ? 'bottle' : 'bottles';
-                                
-                                contentHTML += `
-                                    <div class="wine-card">
-                                        <div class="wine-card-title">${wine.name || 'Unknown'}</div>
-                                        <div class="wine-card-details">
-                                            <div class="wine-card-info">
-                                                <span class="wine-varietal">${wine.varietal || 'N/A'}</span>
-                                                ${wine.year !== 'N/A' ? ` · ${yearDisplay}` : ''}
-                                            </div>
-                                            <div class="wine-card-count">${wine.bottles} ${bottleText}</div>
-                                        </div>
-                                    </div>
-                                `;
-                            });
-                            
-                            contentHTML += `
-                                    </div>
+                        if (!grouped[type].length) return;
+                        const tot = grouped[type].reduce((s,w) => s + w.bottles, 0);
+                        html += `
+                            <div class="wine-category-section">
+                                <div class="wine-category-header" data-category="${type}">
+                                    ${type} Wines <span class="wine-category-count">(${tot} bottles)</span>
                                 </div>
-                            `;
-                        }
+                                <div class="wine-cards" data-category="${type}">`;
+                        grouped[type].forEach(wine => {
+                            const yr  = wine.year !== 'N/A' ? `<span class="wine-year">${wine.year}</span>` : '';
+                            const btl = wine.bottles === 1 ? 'bottle' : 'bottles';
+                            html += `
+                                <div class="wine-card">
+                                    <div class="wine-card-title">${wine.name || 'Unknown'}</div>
+                                    <div class="wine-card-details">
+                                        <div class="wine-card-info">
+                                            <span class="wine-varietal">${wine.varietal}</span>${wine.year !== 'N/A' ? ` · ${yr}` : ''}
+                                        </div>
+                                        <div class="wine-card-count">${wine.bottles} ${btl}</div>
+                                    </div>
+                                </div>`;
+                        });
+                        html += '</div></div>';
                     });
-    
-                    contentHTML += `</div>`;
+                    html += '</div>';
                 } else {
-                    // Standard table layout for desktop (keep your existing code)
-                    contentHTML = `
+                    // Table layout for desktop
+                    html = `
                         <div class="inventory-table-container">
                             <table class="inventory-table main-headers-only">
-                                <thead>
-                                    <tr>
-                                        <th>Wine</th>
-                                        <th>Varietal</th>
-                                        <th>Year</th>
-                                        <th>Bottles</th>
-                                    </tr>
-                                </thead>
+                                <thead><tr>
+                                    <th>Wine</th>
+                                    <th>Varietal</th>
+                                    <th>Year</th>
+                                    <th>Bottles</th>
+                                </tr></thead>
                             </table>
-                            <div id="wine-categories-container">
-                    `;
-
+                            <div id="wine-categories-container">`;
                     ['White', 'Red', 'Other'].forEach(type => {
-                        if (groupedWines[type].length > 0) {
-                            const totalBottles = groupedWines[type].reduce((sum, wine) => sum + wine.bottles, 0);
-                            
-                            contentHTML += `
-                                <div class="wine-table-container">
-                                    <div class="wine-category-header">
-                                        ${type} Wines - <i>${totalBottles} total</i>
-                                    </div>
-                                    <table class="wine-category-table">
-                                        <tbody>
-                            `;
-                            
-                            groupedWines[type].forEach(wine => {
-                                contentHTML += `
-                                    <tr>
-                                        <td>${wine.name || 'Unknown'}</td>
-                                        <td>${wine.varietal || 'N/A'}</td>
-                                        <td>${wine.year || 'N/A'}</td>
-                                        <td>${wine.bottles || 0}</td>
-                                    </tr>
-                                `;
-                            });
-                            
-                            contentHTML += `
-                                        </tbody>
-                                    </table>
-                                </div>
-                            `;
-                        }
+                        if (!grouped[type].length) return;
+                        const tot = grouped[type].reduce((s,w) => s + w.bottles, 0);
+                        html += `
+                            <div class="wine-table-container">
+                                <div class="wine-category-header">${type} Wines — <em>${tot} bottles</em></div>
+                                <table class="wine-category-table"><tbody>`;
+                        grouped[type].forEach(wine => {
+                            html += `<tr>
+                                <td>${wine.name || 'Unknown'}</td>
+                                <td>${wine.varietal}</td>
+                                <td class="wine-year">${wine.year !== 'N/A' ? wine.year : ''}</td>
+                                <td>${wine.bottles}</td>
+                            </tr>`;
+                        });
+                        html += '</tbody></table></div>';
                     });
-                    
-                    contentHTML += `
-                            </div>
-                        </div>
-                    `;
+                    html += '</div></div>';
                 }
-                
-                inventoryContent.innerHTML = contentHTML;
-                // Add the collapsible functionality, but only for mobile
+
+                lockerContent.innerHTML = html;
+
+                // Mobile: collapsible category sections
                 if (isMobile) {
-                    // Add styles for the toggle icons
-                    const collapsibleStyles = document.createElement('style');
-                    collapsibleStyles.textContent = `
-                        @media (max-width: 768px) {
-                            .wine-category-header {
-                                cursor: pointer;
-                                position: relative;
-                                padding-right: 40px;
-                            }
-                            
-                            .category-toggle {
-                                position: absolute;
-                                right: 16px;
-                                top: 50%;
-                                transform: translateY(-50%);
-                                color: rgba(255,255,255,0.9);
-                                font-size: 16px;
-                            }
-                            
-                            .category-toggle i {
-                                transition: transform 0.6s ease;
-                            }
-                            
-                            .wine-cards {
-                                transition: max-height 0.6s ease-in-out, opacity 0.5s ease;
-                                overflow: hidden;
-                                will-change: max-height;
-                            }
-                        }
-                    `;
-                    document.head.appendChild(collapsibleStyles);
-                    
-                    // Wait a moment for the DOM to update
+                    if (!document.getElementById('toggle-styles')) {
+                        const s = document.createElement('style');
+                        s.id = 'toggle-styles';
+                        s.textContent = `
+                            @media (max-width: 768px) {
+                                .wine-category-header { cursor: pointer; padding-right: 40px; }
+                                .category-toggle { position: absolute; right: 16px; top: 50%; transform: translateY(-50%); color: rgba(255,255,255,0.9); font-size: 16px; }
+                                .category-toggle i { transition: transform 0.3s ease; }
+                                .wine-cards { transition: max-height 0.4s ease-in-out, opacity 0.35s ease; overflow: hidden; will-change: max-height; }
+                            }`;
+                        document.head.appendChild(s);
+                    }
                     setTimeout(() => {
-                        // Get all category headers
-                        const categoryHeaders = document.querySelectorAll('.wine-category-header');
-                        
-                        categoryHeaders.forEach(header => {
-                            // Add toggle icon
-                            const toggleIcon = document.createElement('span');
-                            toggleIcon.className = 'category-toggle';
-                            toggleIcon.innerHTML = '<i class="fas fa-chevron-up"></i>';
-                            header.appendChild(toggleIcon);
-                            
-                            // Get the next element (the wine cards container)
-                            const cardsContainer = header.nextElementSibling;
-                            
-                            // Add click event
+                        document.querySelectorAll('.wine-category-header').forEach(header => {
+                            const toggle = document.createElement('span');
+                            toggle.className = 'category-toggle';
+                            toggle.innerHTML = '<i class="fas fa-chevron-up"></i>';
+                            header.appendChild(toggle);
+                            const cards = header.nextElementSibling;
                             header.addEventListener('click', function() {
-                                // Toggle visibility
-                                const icon = this.querySelector('.category-toggle i');
-                                
-                                if (cardsContainer.style.display === 'none') {
-                                    cardsContainer.style.display = 'block';
-                                    icon.className = 'fas fa-chevron-up';
-                                } else {
-                                    cardsContainer.style.display = 'none';
-                                    icon.className = 'fas fa-chevron-down';
-                                }
+                                const icon      = header.querySelector('.category-toggle i');
+                                const collapsed = cards.style.display === 'none';
+                                cards.style.display = collapsed ? 'block' : 'none';
+                                icon.className = collapsed ? 'fas fa-chevron-up' : 'fas fa-chevron-down';
                             });
                         });
-                    }, 100);
+                    }, 50);
                 }
             }
-                        
-            // Close the detail modal
-            function closeDetailModal() {
-                detailModal.style.display = 'none';
-                document.body.style.overflow = ''; // Restore scrolling
-            }
-            
-            // Handle escape key to close modal
-            document.addEventListener('keydown', function(e) {
-                if (e.key === 'Escape' && detailModal.style.display === 'flex') {
-                    closeDetailModal();
+
+            // ── Helpers ────────────────────────────────────────────────────
+            function getWineType(varietal) {
+                if (varietal && varietal !== 'N/A') {
+                    const t = varietalTypeMap[varietal.toLowerCase()];
+                    if (t) return t;
                 }
-            });
+                return 'Other';
+            }
+
+            function showError(msg) {
+                lookupError.textContent = msg;
+                lookupError.style.display = 'block';
+                // Re-trigger shake animation
+                lookupError.style.animation = 'none';
+                lookupError.offsetHeight;
+                lookupError.style.animation = '';
+            }
+
+            function clearError() {
+                lookupError.style.display = 'none';
+                lookupError.textContent   = '';
+            }
         });
     </script>
 </body>
